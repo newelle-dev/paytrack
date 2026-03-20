@@ -3,57 +3,63 @@ The "Arzi Business Dashboard" is designed to deliver a premium fintech experienc
 
 ---
 
-## 1. The Color Palette (Tailwind CSS Configuration)  
+## 1. The Color Palette (Tailwind CSS v4 Configuration)  
 
-Below is the Tailwind configuration for the theme's `extend.colors` object.
+In Tailwind CSS v4, configuration is CSS-first. Custom colors and theme variables are defined within the `@theme` block in your global CSS file.
 
-### Tailwind Configuration
-```javascript
-// tailwind.config.js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        ivory: {
-          DEFAULT: '#FBFAF5', // Base Gilded Ivory, used for backgrounds
-          light: '#FFFFFF', // Pure white for primary background contrast
-          cream: '#F3F0E5', // Soft cream for secondary content areas
-        },
-        gold: {
-          DEFAULT: '#C5A880', // Luxurious Metallic Gold for primary elements
-          dark: '#A38862', // Gold hover/dark states
-          light: '#E1CBA3', // Subtle gold highlight variations
-        },
-        semantic: {
-          success: '#27AE60', // High-contrast green for Paid/Success states
-          error: '#E74C3C', // Rich red for Overdue/Deficit states
-          warning: '#E2A03F', // Deep amber for warning states
-        },
-        text: {
-          primary: '#2C2C2C', // Dark charcoal for primary text on ivory
-          secondary: '#6B6B6B', // Muted gray for secondary text
-        },
-      },
-    },
-  },
-};
+### Theme Configuration (globals.css)
+```css
+@import "tailwindcss";
+
+@theme {
+  /* Ivory Palette - Base backgrounds */
+  --color-ivory: #FBFAF5;
+  --color-ivory-light: #FFFFFF;
+  --color-ivory-cream: #F3F0E5;
+
+  /* Gold Palette - Primary actions & Branding */
+  --color-gold: #C5A880;
+  --color-gold-dark: #A38862;
+  --color-gold-light: #E1CBA3;
+
+  /* Semantic Palette - Status indicators */
+  --color-success: #27AE60;
+  --color-error: #E74C3C;
+  --color-warning: #E2A03F;
+
+  /* Text Palette */
+  --color-text-primary: #2C2C2C;
+  --color-text-secondary: #6B6B6B;
+
+  /* Custom Transitions & Effects */
+  --animate-gold-glow: gold-glow 2s infinite;
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes gold-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
 ```
+
 
 ### Descriptions  
 1. **Background Layers (Gilded Ivory)**  
-   - `ivory.DEFAULT` (#FBFAF5): Default background for primary app sections.  
-   - `ivory.light` (#FFFFFF): High-contrast white for cards and focused content.  
-   - `ivory.cream` (#F3F0E5): Secondary background to create distinct layers.  
+   - `ivory` (#FBFAF5): Default background for primary app sections. (CSS: `bg-ivory`)
+   - `ivory-light` (#FFFFFF): High-contrast white for cards and focused content. (CSS: `bg-ivory-light`)
+   - `ivory-cream` (#F3F0E5): Secondary background to create distinct layers. (CSS: `bg-ivory-cream`)
 
 2. **Primary Actions (Luxurious Metallic Gold)**  
-   - `gold.DEFAULT` (#C5A880): Bold primary actions (buttons, active states).  
-   - `gold.dark` (#A38862): Hover or active states for buttons.  
-   - `gold.light` (#E1CBA3): Used sparingly for decorative highlights or accents.  
+   - `gold` (#C5A880): Bold primary actions (buttons, active states). (CSS: `bg-gold`)
+   - `gold-dark` (#A38862): Hover or active states for buttons. (CSS: `bg-gold-dark`)
+   - `gold-light` (#E1CBA3): Used sparingly for decorative highlights or accents. (CSS: `bg-gold-light`)
 
 3. **Semantic Colors (Success, Error, Warning)**  
-   - **Success**: `success` (#27AE60): High-contrast green, intuitive for Paid status.  
-   - **Error**: `error` (#E74C3C): Rich red ensuring clarity for overdue balances.  
-   - **Warning**: `warning` (#E2A03F): Amber for edge cases requiring attention but not critical (e.g., nearing payment due).  
+   - **Success**: `success` (#27AE60): High-contrast green for Paid/Success states. (CSS: `text-success`)
+   - **Error**: `error` (#E74C3C): Rich red for Overdue/Deficit states. (CSS: `text-error`)
+   - **Warning**: `warning` (#E2A03F): Amber for nearing payment due dates. (CSS: `text-warning`)
 
 ---
 
@@ -103,8 +109,8 @@ color: #2C2C2C;
 Cards are used for high-level key metrics, such as Total Capital and Total Interest. They must balance premium aesthetics with readability.  
 
 #### Design Details  
-- **Background**: `ivory.light` (#FFFFFF) to provide high contrast.  
-- **Borders**: Thin 1px border using `ivory.cream`.  
+- **Background**: `ivory-light` (#FFFFFF) to provide high contrast.  
+- **Borders**: Thin 1px border using `ivory-cream`.  
 - **Shadow**:  
   ```css
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
@@ -114,7 +120,7 @@ Cards are used for high-level key metrics, such as Total Capital and Total Inter
   - Card Gutter: `gap-6` between multiple cards.  
 - **Typography**:
   - Header: `text-lg font-bold text-text-primary` (e.g., “Total Capital”).  
-  - Value: `text-xl font-medium text-gold.DEFAULT` (#C5A880).
+  - Value: `text-xl font-medium text-gold` (#C5A880).
 
 ---
 
@@ -122,11 +128,11 @@ Cards are used for high-level key metrics, such as Total Capital and Total Inter
 #### Layout  
 The Loan Creation Form uses a **card-based layout** with clear input focus:  
 - **Form Fields**:  
-  - Use **card background** (`ivory.light`) with input fields aligned vertically.  
+  - Use **card background** (`ivory-light`) with input fields aligned vertically.  
   - Inputs styled with high-contrast, clickable borders:
     ```css
-    border: 1px solid #C5A880; /* Default Metallic Gold Border */
-    focus: border-2 border-gold.dark; /* Darker focus state */
+    border: 1px solid var(--color-gold); /* Default Metallic Gold Border */
+    focus: border-2 border-gold-dark; /* Darker focus state via @theme variable */
     ```
 
 #### Example Layout
@@ -176,12 +182,12 @@ The Payment Modal prioritizes **minimalism and rapid data entry**. Users should 
   ```
 
 #### Focus States  
-- **Input Focus**: Use prominent golden borders with `border-gold.dark` (#A38862).  
+- **Input Focus**: Use prominent golden borders with `border-gold-dark` (#A38862).  
 
 #### Actions  
 - **Primary Button ("Submit Log")**:  
-  - Background: `gold.DEFAULT` (#C5A880).  
-  - Hover: `gold.dark` (#A38862).  
+  - Background: `gold` (#C5A880).  
+  - Hover: `gold-dark` (#A38862).  
   - Disabled: `opacity-50` and `cursor-not-allowed`.  
 
 ---
