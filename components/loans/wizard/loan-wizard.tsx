@@ -259,7 +259,8 @@ export function LoanWizard({ initialBorrowers }: LoanWizardProps) {
                 </option>
                 {initialBorrowers.map((b) => (
                   <option key={b.id} value={b.id}>
-                    {b.first_name} {b.last_name} {b.email ? `(${b.email})` : ""}
+                    {b.first_name}{b.last_name ? ` ${b.last_name}` : ""}{" "}
+                    {b.email ? `(${b.email})` : ""}
                   </option>
                 ))}
               </Select>
@@ -461,8 +462,10 @@ export function LoanWizard({ initialBorrowers }: LoanWizardProps) {
                   <div className="flex justify-between py-1 border-b">
                     <span className="text-text-secondary">Borrower</span>
                     <span className="font-medium">
-                      {selectedBorrower?.first_name}{" "}
-                      {selectedBorrower?.last_name}
+                      {selectedBorrower?.first_name}
+                      {selectedBorrower?.last_name
+                        ? ` ${selectedBorrower.last_name}`
+                        : ""}
                     </span>
                   </div>
                   <div className="flex justify-between py-1 border-b">

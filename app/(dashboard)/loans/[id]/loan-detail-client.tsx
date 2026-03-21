@@ -182,8 +182,9 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
               Loan Details
             </h1>
             <p className="text-sm text-text-secondary mt-1">
-              {loan.borrower?.first_name} {loan.borrower?.last_name} &bull;{" "}
-              {loan.loan_category}
+              {loan.borrower?.first_name}
+              {loan.borrower?.last_name ? ` ${loan.borrower.last_name}` : ""}{" "}
+              &bull; {loan.loan_category}
             </p>
           </div>
         </div>
@@ -226,7 +227,7 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         loanId={loan.id}
-        borrowerName={`${loan.borrower?.first_name} ${loan.borrower?.last_name}`}
+        borrowerName={`${loan.borrower?.first_name}${loan.borrower?.last_name ? ` ${loan.borrower.last_name}` : ""}`}
         remainingBalance={loan.remaining_balance || 0}
         suggestedAmount={suggestedAmount}
       />
@@ -367,7 +368,8 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
             </CardHeader>
             <CardContent className="pt-4 flex flex-col gap-2">
               <p className="font-medium text-text-primary">
-                {loan.borrower?.first_name} {loan.borrower?.last_name}
+                {loan.borrower?.first_name}
+                {loan.borrower?.last_name ? ` ${loan.borrower.last_name}` : ""}
               </p>
               {loan.borrower?.email && (
                 <p className="text-sm text-text-secondary">

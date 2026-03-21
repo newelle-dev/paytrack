@@ -14,15 +14,16 @@ export async function createBorrower(formData: FormData) {
   }
 
   const firstName = formData.get("first_name") as string;
-  const lastName = formData.get("last_name") as string;
+  let lastName = formData.get("last_name") as string | null;
   let email = formData.get("email") as string | null;
   let phone = formData.get("phone_number") as string | null;
 
-  if (!firstName || !lastName) {
-    throw new Error("First name and last name are required");
+  if (!firstName) {
+    throw new Error("First name is required");
   }
 
-  // Convert empty strings to null for optional fields to avoid unique constraint issues
+  // Convert empty strings to null for optional fields
+  if (lastName?.trim() === "") lastName = null;
   if (email?.trim() === "") email = null;
   if (phone?.trim() === "") phone = null;
 
@@ -94,15 +95,16 @@ export async function updateBorrower(formData: FormData) {
   }
 
   const firstName = formData.get("first_name") as string;
-  const lastName = formData.get("last_name") as string;
+  let lastName = formData.get("last_name") as string | null;
   let email = formData.get("email") as string | null;
   let phone = formData.get("phone_number") as string | null;
 
-  if (!firstName || !lastName) {
-    throw new Error("First name and last name are required");
+  if (!firstName) {
+    throw new Error("First name is required");
   }
 
   // Convert empty strings to null for optional fields
+  if (lastName?.trim() === "") lastName = null;
   if (email?.trim() === "") email = null;
   if (phone?.trim() === "") phone = null;
 

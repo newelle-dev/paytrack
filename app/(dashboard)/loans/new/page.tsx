@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { LoanWizard } from "@/components/loans/wizard/loan-wizard";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Borrower } from "@/lib/types";
 
 export const metadata = {
   title: "New Loan | PayTrack",
@@ -25,7 +26,7 @@ export default async function NewLoanPage() {
   // Fetch borrowers to pass into wizard
   const { data: borrowers, error } = await supabase
     .from("borrowers")
-    .select("id, first_name, last_name, email")
+    .select("id, first_name, last_name, email, phone_number, created_at")
     .order("last_name", { ascending: true });
 
   if (error) {
@@ -55,7 +56,7 @@ export default async function NewLoanPage() {
       </div>
 
       <div className="w-full">
-        <LoanWizard initialBorrowers={borrowers || []} />
+        <LoanWizard initialBorrowers={(borrowers as Borrower[]) || []} />
       </div>
     </div>
   );

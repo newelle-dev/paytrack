@@ -82,7 +82,7 @@ export default async function DashboardPage() {
     id: sch.id,
     expected_date: sch.expected_date,
     expected_amount: Number(sch.expected_amount),
-    borrower_name: `${sch.loans.borrowers.first_name} ${sch.loans.borrowers.last_name}`,
+    borrower_name: `${sch.loans.borrowers.first_name}${sch.loans.borrowers.last_name ? ` ${sch.loans.borrowers.last_name}` : ""}`,
     loan_category: sch.loans.loan_category,
   }));
 

@@ -194,3 +194,32 @@ export async function logPayment(payload: LogPaymentPayload) {
 
   return { success: true };
 }
+
+export async function deleteLoan(loanId: string) {
+  const supabase = await createClient();
+
+  // Verify User
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "You must be logged in to delete a loan." };
+  }
+
+  // Delete loan
+  const { error } = await supabase
+    .from("loans")
+    .delete()
+    .eq("id", loanId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Supabase Loan Delete Error:", error);
+    return { error: "Failed to delete loan. " + error.message };
+  }
+
+  revalidatePath("/loans");
+  revalidatePath("/borrowers");
+
+  return { success: true };
+}

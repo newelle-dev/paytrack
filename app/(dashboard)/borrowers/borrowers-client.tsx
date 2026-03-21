@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { AddBorrowerModal } from "@/components/borrowers/add-borrower-modal";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
 import { deleteBorrower } from "@/app/(dashboard)/borrowers/actions";
 import { EmptyState } from "@/components/ui/empty-state";
 
@@ -50,7 +51,7 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
   const filteredBorrowers = useMemo(() => {
     return initialBorrowers.filter((b) => {
       const q = search.toLowerCase();
-      const fullName = `${b.first_name} ${b.last_name}`.toLowerCase();
+      const fullName = `${b.first_name}${b.last_name ? ` ${b.last_name}` : ""}`.toLowerCase();
       return (
         fullName.includes(q) ||
         (b.email && b.email.toLowerCase().includes(q)) ||
@@ -59,16 +60,14 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
     });
   }, [initialBorrowers, search]);
 
-  async function handleDelete(id: string) {
-    if (
-      confirm(
-        "Are you sure you want to delete this borrower? All their loans and payments will be removed.",
-      )
-    ) {
-      const formData = new FormData();
-      formData.append("id", id);
-      await deleteBorrower(formData);
-    }
+  const [borrowerToDelete, setBorrowerToDelete] = useState<string | null>(null);
+
+  async function confirmDelete() {
+    if (!borrowerToDelete) return;
+    const formData = new FormData();
+    formData.append("id", borrowerToDelete);
+    await deleteBorrower(formData);
+    setBorrowerToDelete(null);
   }
 
   return (
@@ -144,9 +143,13 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
                     </TableRow>
                   ) : (
                     filteredBorrowers.map((borrower) => (
-                      <TableRow key={borrower.id} className="group">
+                      <TableRow 
+                        key={borrower.id} 
+                        className="group cursor-pointer hover:bg-ivory-cream/50 transition-colors"
+                        onClick={() => router.push(`/borrowers/${borrower.id}`)}
+                      >
                         <TableCell className="font-medium text-text-primary">
-                          {borrower.first_name} {borrower.last_name}
+                          {borrower.first_name}{borrower.last_name ? ` ${borrower.last_name}` : ""}
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-col text-xs text-text-secondary space-y-0.5">
@@ -179,19 +182,11 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() =>
-                                router.push(`/borrowers/${borrower.id}`)
-                              }
-                              className="h-8 w-8 text-text-secondary hover:text-gold"
-                              title="View Details"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDelete(borrower.id)}
-                              className="h-8 w-8 text-text-secondary hover:text-red-500"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setBorrowerToDelete(borrower.id);
+                              }}
+                              className="h-8 w-8 text-text-secondary hover:text-red-500 transition-colors"
                               title="Delete Borrower"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -211,6 +206,14 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
       <AddBorrowerModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+      />
+
+      <DeleteConfirmationModal
+        isOpen={!!borrowerToDelete}
+        onClose={() => setBorrowerToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Borrower"
+        description="Are you sure you want to delete this borrower? All their loans and payments will be removed."
       />
     </div>
   );

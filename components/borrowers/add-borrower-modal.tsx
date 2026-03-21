@@ -67,12 +67,11 @@ export function AddBorrowerModal({ isOpen, onClose }: AddBorrowerModalProps) {
               htmlFor="last_name"
               className="text-xs font-medium text-text-secondary"
             >
-              Last Name *
+              Last Name (Optional)
             </label>
             <Input
               id="last_name"
               name="last_name"
-              required
               placeholder="Doe"
               disabled={pending}
             />
@@ -84,7 +83,7 @@ export function AddBorrowerModal({ isOpen, onClose }: AddBorrowerModalProps) {
             htmlFor="email"
             className="text-xs font-medium text-text-secondary"
           >
-            Email Address
+            Email Address (Optional)
           </label>
           <Input
             id="email"
@@ -100,7 +99,7 @@ export function AddBorrowerModal({ isOpen, onClose }: AddBorrowerModalProps) {
             htmlFor="phone_number"
             className="text-xs font-medium text-text-secondary"
           >
-            Phone Number
+            Phone Number (Optional)
           </label>
           <Input
             id="phone_number"

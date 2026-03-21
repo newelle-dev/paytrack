@@ -142,7 +142,7 @@ export function BorrowerDetailClient({
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <h1 className="text-2xl font-semibold text-text-primary flex-1">
-          {borrower.first_name} {borrower.last_name}
+          {borrower.first_name}{borrower.last_name ? ` ${borrower.last_name}` : ""}
         </h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setIsEditModalOpen(true)}>
@@ -386,13 +386,12 @@ export function BorrowerDetailClient({
                 htmlFor="last_name"
                 className="text-xs font-medium text-text-secondary"
               >
-                Last Name *
+                Last Name (Optional)
               </label>
               <Input
                 id="last_name"
                 name="last_name"
-                required
-                defaultValue={borrower.last_name}
+                defaultValue={borrower.last_name || ""}
                 disabled={pending}
               />
             </div>

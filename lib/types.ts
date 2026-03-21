@@ -1,7 +1,7 @@
 export interface Borrower {
   id: string;
   first_name: string;
-  last_name: string;
+  last_name: string | null;
   email: string | null;
   phone_number: string | null;
   created_at: string;

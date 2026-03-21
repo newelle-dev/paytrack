@@ -3,8 +3,10 @@
 import * as React from "react";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Eye, Wallet } from "lucide-react";
+import { Search, Eye, Wallet, Trash2 } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-modal";
+import { deleteLoan } from "@/app/(dashboard)/loans/actions";
 import { format, parseISO } from "date-fns";
 
 import {
@@ -23,7 +25,7 @@ import { Select } from "@/components/ui/select";
 interface Borrower {
   id: string;
   first_name: string;
-  last_name: string;
+  last_name: string | null;
 }
 
 interface Loan {
@@ -46,6 +48,13 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [loanToDelete, setLoanToDelete] = useState<string | null>(null);
+
+  async function handleConfirmDelete() {
+    if (!loanToDelete) return;
+    await deleteLoan(loanToDelete);
+    setLoanToDelete(null);
+  }
 
   const filteredLoans = useMemo(() => {
     return initialLoans.filter((loan) => {
@@ -53,7 +62,7 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
 
       const q = search.toLowerCase();
       const borrowerName = b
-        ? `${b.first_name} ${b.last_name}`.toLowerCase()
+        ? `${b.first_name}${b.last_name ? ` ${b.last_name}` : ""}`.toLowerCase()
         : "";
 
       const matchesSearch = borrowerName.includes(q);
@@ -169,9 +178,15 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
                     ? loan.borrower[0]
                     : loan.borrower;
                   return (
-                    <TableRow key={loan.id} className="group">
+                    <TableRow 
+                      key={loan.id} 
+                      className="group cursor-pointer hover:bg-ivory-cream/50 transition-colors"
+                      onClick={() => router.push(`/loans/${loan.id}`)}
+                    >
                       <TableCell className="font-medium text-text-primary whitespace-nowrap">
-                        {b ? `${b.first_name} ${b.last_name}` : "Unknown"}
+                        {b 
+                          ? `${b.first_name}${b.last_name ? ` ${b.last_name}` : ""}` 
+                          : "Unknown"}
                       </TableCell>
                       <TableCell>
                         <Badge
@@ -198,15 +213,20 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => router.push(`/loans/${loan.id}`)}
-                          className="h-8 w-8 text-text-secondary hover:text-gold transition-colors"
-                          title="View Loan Details"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setLoanToDelete(loan.id);
+                            }}
+                            className="h-8 w-8 text-text-secondary hover:text-red-500 transition-colors"
+                            title="Delete Loan"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
@@ -216,6 +236,14 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
           </Table>
         </div>
       </div>
+
+      <DeleteConfirmationModal
+        isOpen={!!loanToDelete}
+        onClose={() => setLoanToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Loan"
+        description="Are you sure you want to delete this loan? All its payments and schedule will be removed."
+      />
     </div>
   );
 }
