@@ -1,24 +1,40 @@
-import { format, parseISO } from "date-fns"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { formatCurrency } from "@/lib/utils"
-import { CalendarDays, Clock } from "lucide-react"
+import { format, parseISO } from "date-fns";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { formatCurrency } from "@/lib/utils";
+import { CalendarDays, Clock } from "lucide-react";
 
 interface ScheduleItem {
-  id: string
-  expected_date: string
-  expected_amount: number
-  borrower_name: string
-  loan_category: string
+  id: string;
+  expected_date: string;
+  expected_amount: number;
+  borrower_name: string;
+  loan_category: string;
 }
 
 interface UpcomingPaymentsProps {
-  dueToday: ScheduleItem[]
-  dueThisWeek: ScheduleItem[]
+  dueToday: ScheduleItem[];
+  dueThisWeek: ScheduleItem[];
 }
 
-export function UpcomingPayments({ dueToday, dueThisWeek }: UpcomingPaymentsProps) {
+export function UpcomingPayments({
+  dueToday,
+  dueThisWeek,
+}: UpcomingPaymentsProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card>
@@ -48,7 +64,10 @@ export function UpcomingPayments({ dueToday, dueThisWeek }: UpcomingPaymentsProp
             <TableBody>
               {dueToday.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="h-24 text-center text-text-secondary">
+                  <TableCell
+                    colSpan={3}
+                    className="h-24 text-center text-text-secondary"
+                  >
                     No payments due today.
                   </TableCell>
                 </TableRow>
@@ -79,13 +98,9 @@ export function UpcomingPayments({ dueToday, dueThisWeek }: UpcomingPaymentsProp
               <CalendarDays className="h-5 w-5 text-gold" />
               Next 7 Days
             </CardTitle>
-            <CardDescription>
-              Upcoming collections for the week
-            </CardDescription>
+            <CardDescription>Upcoming collections for the week</CardDescription>
           </div>
-          <Badge variant="secondary">
-            {dueThisWeek.length} Upcoming
-          </Badge>
+          <Badge variant="secondary">{dueThisWeek.length} Upcoming</Badge>
         </CardHeader>
         <CardContent className="px-0">
           <Table>
@@ -99,7 +114,10 @@ export function UpcomingPayments({ dueToday, dueThisWeek }: UpcomingPaymentsProp
             <TableBody>
               {dueThisWeek.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="h-24 text-center text-text-secondary">
+                  <TableCell
+                    colSpan={3}
+                    className="h-24 text-center text-text-secondary"
+                  >
                     No upcoming payments this week.
                   </TableCell>
                 </TableRow>
@@ -123,5 +141,5 @@ export function UpcomingPayments({ dueToday, dueThisWeek }: UpcomingPaymentsProp
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

@@ -3,7 +3,13 @@
 import { Menu, LogOut } from "lucide-react";
 import { signout } from "@/app/login/actions";
 
-export function TopNav({ onMenuClick, userEmail }: { onMenuClick: () => void; userEmail?: string }) {
+export function TopNav({
+  onMenuClick,
+  userEmail,
+}: {
+  onMenuClick: () => void;
+  userEmail?: string;
+}) {
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-ivory-cream bg-ivory-light px-4 shadow-sm sm:px-6 lg:px-8">
       <button
@@ -25,7 +31,10 @@ export function TopNav({ onMenuClick, userEmail }: { onMenuClick: () => void; us
               {userEmail ? userEmail.charAt(0).toUpperCase() : "U"}
             </div>
           </div>
-          <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-ivory-cream" aria-hidden="true" />
+          <div
+            className="hidden lg:block lg:h-6 lg:w-px lg:bg-ivory-cream"
+            aria-hidden="true"
+          />
           <form action={signout}>
             <button
               type="submit"

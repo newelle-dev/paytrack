@@ -1,33 +1,35 @@
-"use server"
+"use server";
 
-import { createClient } from "@/lib/supabase/server"
-import { revalidatePath } from "next/cache"
-import { ScheduleInput } from "@/lib/utils/loanMath"
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import { ScheduleInput } from "@/lib/utils/loanMath";
 
 type CreateLoanPayload = {
-  borrowerId: string
-  principalAmount: number
-  releaseDate: string
-  loanCategory: "Small" | "Big"
-  termType: string
-  totalInterestExpected: number
-  rcAllocation: number
-  edithAllocation: number
-  schedules: ScheduleInput[]
-}
+  borrowerId: string;
+  principalAmount: number;
+  releaseDate: string;
+  loanCategory: "Small" | "Big";
+  termType: string;
+  totalInterestExpected: number;
+  rcAllocation: number;
+  edithAllocation: number;
+  schedules: ScheduleInput[];
+};
 
 export async function createLoan(payload: CreateLoanPayload) {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   // 1. Verify User
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    return { error: "You must be logged in to create a loan." }
+    return { error: "You must be logged in to create a loan." };
   }
 
   // 2. Validate payload
   if (!payload.borrowerId || payload.principalAmount <= 0) {
-    return { error: "Invalid loan details provided." }
+    return { error: "Invalid loan details provided." };
   }
 
   // 3. Insert Loan record
@@ -46,11 +48,11 @@ export async function createLoan(payload: CreateLoanPayload) {
       status: "Active",
     })
     .select()
-    .single()
+    .single();
 
   if (loanError) {
-    console.error("Supabase Loan Insert Error:", loanError)
-    return { error: "Failed to create loan record. " + loanError.message }
+    console.error("Supabase Loan Insert Error:", loanError);
+    return { error: "Failed to create loan record. " + loanError.message };
   }
 
   // 4. Insert Schedules
@@ -58,34 +60,40 @@ export async function createLoan(payload: CreateLoanPayload) {
     loan_id: loan.id,
     expected_date: sch.expectedDate,
     expected_amount: sch.expectedAmount,
-  }))
+  }));
 
   const { error: scheduleError } = await supabase
     .from("schedules")
-    .insert(scheduleInserts)
+    .insert(scheduleInserts);
 
   if (scheduleError) {
-    console.error("Supabase Schedule Insert Error:", scheduleError)
+    console.error("Supabase Schedule Insert Error:", scheduleError);
     // In a real production system, if this fails, we might want to rollback the loan insert (transaction).
     // For now, we return the error.
-    return { error: "Loan created, but failed to generate schedule. " + scheduleError.message }
+    return {
+      error:
+        "Loan created, but failed to generate schedule. " +
+        scheduleError.message,
+    };
   }
 
   // 5. Revalidate cache
-  revalidatePath("/borrowers")
-  revalidatePath("/loans")
-  revalidatePath(`/borrowers/${payload.borrowerId}`)
+  revalidatePath("/borrowers");
+  revalidatePath("/loans");
+  revalidatePath(`/borrowers/${payload.borrowerId}`);
 
-  return { success: true, loanId: loan.id }
+  return { success: true, loanId: loan.id };
 }
 
 export async function markLoanAsPaid(loanId: string) {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   // Verify User
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    return { error: "You must be logged in to update a loan." }
+    return { error: "You must be logged in to update a loan." };
   }
 
   // Update loan status
@@ -93,55 +101,55 @@ export async function markLoanAsPaid(loanId: string) {
     .from("loans")
     .update({ status: "Paid" })
     .eq("id", loanId)
-    .eq("user_id", user.id)
+    .eq("user_id", user.id);
 
   if (error) {
-    console.error("Supabase Loan Update Error:", error)
-    return { error: "Failed to update loan status. " + error.message }
+    console.error("Supabase Loan Update Error:", error);
+    return { error: "Failed to update loan status. " + error.message };
   }
 
-  revalidatePath("/loans")
-  revalidatePath(`/loans/${loanId}`)
+  revalidatePath("/loans");
+  revalidatePath(`/loans/${loanId}`);
 
-  return { success: true }
+  return { success: true };
 }
 
 type LogPaymentPayload = {
-  loanId: string
-  amountPaid: number
-  datePaid: string
-  paymentMethod?: string
-  notes?: string
-}
+  loanId: string;
+  amountPaid: number;
+  datePaid: string;
+  paymentMethod?: string;
+  notes?: string;
+};
 
 export async function logPayment(payload: LogPaymentPayload) {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
   // 1. Verify User
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    return { error: "You must be logged in to log a payment." }
+    return { error: "You must be logged in to log a payment." };
   }
 
   // 2. Validate payload
   if (!payload.loanId || payload.amountPaid <= 0 || !payload.datePaid) {
-    return { error: "Invalid payment details provided." }
+    return { error: "Invalid payment details provided." };
   }
 
   // 3. Insert Payment record
-  const { error: paymentError } = await supabase
-    .from("payments")
-    .insert({
-      loan_id: payload.loanId,
-      amount_paid: payload.amountPaid,
-      date_paid: payload.datePaid,
-      payment_method: payload.paymentMethod || null,
-      notes: payload.notes || null,
-    })
+  const { error: paymentError } = await supabase.from("payments").insert({
+    loan_id: payload.loanId,
+    amount_paid: payload.amountPaid,
+    date_paid: payload.datePaid,
+    payment_method: payload.paymentMethod || null,
+    notes: payload.notes || null,
+  });
 
   if (paymentError) {
-    console.error("Supabase Payment Insert Error:", paymentError)
-    return { error: "Failed to log payment. " + paymentError.message }
+    console.error("Supabase Payment Insert Error:", paymentError);
+    return { error: "Failed to log payment. " + paymentError.message };
   }
 
   // 4. Check if loan is fully paid
@@ -149,18 +157,22 @@ export async function logPayment(payload: LogPaymentPayload) {
     .from("loans")
     .select("borrower_id, principal_amount, total_interest_expected, status")
     .eq("id", payload.loanId)
-    .single()
+    .single();
 
   if (loan && !loanError && loan.status === "Active") {
     // Fetch total paid
     const { data: payments, error: paymentsError } = await supabase
       .from("payments")
       .select("amount_paid")
-      .eq("loan_id", payload.loanId)
+      .eq("loan_id", payload.loanId);
 
     if (!paymentsError && payments) {
-      const totalPaid = payments.reduce((sum, p) => sum + Number(p.amount_paid), 0)
-      const totalRequired = Number(loan.principal_amount) + Number(loan.total_interest_expected)
+      const totalPaid = payments.reduce(
+        (sum, p) => sum + Number(p.amount_paid),
+        0,
+      );
+      const totalRequired =
+        Number(loan.principal_amount) + Number(loan.total_interest_expected);
 
       if (totalPaid >= totalRequired) {
         // Mark as paid
@@ -168,17 +180,17 @@ export async function logPayment(payload: LogPaymentPayload) {
           .from("loans")
           .update({ status: "Paid" })
           .eq("id", payload.loanId)
-          .eq("user_id", user.id)
+          .eq("user_id", user.id);
       }
     }
   }
 
   // 5. Revalidate cache
-  revalidatePath("/loans")
-  revalidatePath(`/loans/${payload.loanId}`)
+  revalidatePath("/loans");
+  revalidatePath(`/loans/${payload.loanId}`);
   if (loan?.borrower_id) {
-    revalidatePath(`/borrowers/${loan.borrower_id}`)
+    revalidatePath(`/borrowers/${loan.borrower_id}`);
   }
 
-  return { success: true }
+  return { success: true };
 }

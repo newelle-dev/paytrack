@@ -1,23 +1,26 @@
-import { createClient } from "@/lib/supabase/server"
-import { notFound, redirect } from "next/navigation"
-import { BorrowerDetailClient } from "./borrower-detail-client"
+import { createClient } from "@/lib/supabase/server";
+import { notFound, redirect } from "next/navigation";
+import { BorrowerDetailClient } from "./borrower-detail-client";
 
 export default async function BorrowerDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params
-  const supabase = await createClient()
+  const { id } = await params;
+  const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    redirect("/login")
+    redirect("/login");
   }
 
   const { data: borrower, error } = await supabase
     .from("borrowers")
-    .select(`
+    .select(
+      `
       *,
       loans (
         id,
@@ -37,18 +40,19 @@ export default async function BorrowerDetailPage({
           notes
         )
       )
-    `)
+    `,
+    )
     .eq("id", id)
-    .single()
+    .single();
 
   if (error || !borrower) {
-    console.error("Error fetching borrower detail:", error)
-    notFound()
+    console.error("Error fetching borrower detail:", error);
+    notFound();
   }
 
   return (
     <div className="flex flex-col gap-6">
       <BorrowerDetailClient initialData={borrower} />
     </div>
-  )
+  );
 }

@@ -5,6 +5,7 @@ trigger: always_on
 You are an expert in Next.js testing strategies and best practices.
 
 Key Principles:
+
 - Test Server and Client Components differently
 - Use Jest for unit and integration tests
 - Use Playwright for E2E tests
@@ -12,6 +13,7 @@ Key Principles:
 - Implement proper mocking strategies
 
 Unit Testing Setup:
+
 - Install Jest and @testing-library/react
 - Configure jest.config.js for Next.js
 - Use @testing-library/jest-dom
@@ -19,6 +21,7 @@ Unit Testing Setup:
 - Configure TypeScript for tests
 
 Testing Server Components:
+
 - Test as regular async functions
 - Mock database calls
 - Test data fetching logic
@@ -26,6 +29,7 @@ Testing Server Components:
 - Test error boundaries
 
 Testing Client Components:
+
 - Use @testing-library/react
 - Test user interactions
 - Mock useRouter and usePathname
@@ -33,6 +37,7 @@ Testing Client Components:
 - Verify event handlers
 
 Testing Server Actions:
+
 - Test as async functions
 - Mock database operations
 - Test validation logic
@@ -40,6 +45,7 @@ Testing Server Actions:
 - Test error handling
 
 Mocking Next.js APIs:
+
 - Mock next/navigation (useRouter, usePathname)
 - Mock next/image component
 - Mock next/link component
@@ -47,6 +53,7 @@ Mocking Next.js APIs:
 - Mock API route handlers
 
 Integration Testing:
+
 - Test component interactions
 - Test data flow
 - Test form submissions
@@ -54,6 +61,7 @@ Integration Testing:
 - Use MSW for API mocking
 
 E2E Testing with Playwright:
+
 - Install @playwright/test
 - Configure playwright.config.ts
 - Write user journey tests
@@ -61,6 +69,7 @@ E2E Testing with Playwright:
 - Test across browsers
 
 Playwright Best Practices:
+
 - Use page object pattern
 - Test user flows end-to-end
 - Use data-testid attributes
@@ -68,6 +77,7 @@ Playwright Best Practices:
 - Implement visual regression testing
 
 Testing API Routes:
+
 - Test route handlers directly
 - Mock database and external APIs
 - Test authentication
@@ -75,6 +85,7 @@ Testing API Routes:
 - Test rate limiting
 
 Testing Middleware:
+
 - Test middleware logic
 - Mock NextRequest and NextResponse
 - Test authentication checks
@@ -82,6 +93,7 @@ Testing Middleware:
 - Test header modifications
 
 Snapshot Testing:
+
 - Use for component output
 - Update snapshots carefully
 - Review snapshot changes
@@ -89,6 +101,7 @@ Snapshot Testing:
 - Avoid over-using snapshots
 
 Performance Testing:
+
 - Use Lighthouse CI
 - Test Core Web Vitals
 - Monitor bundle size
@@ -96,6 +109,7 @@ Performance Testing:
 - Use @next/bundle-analyzer
 
 Accessibility Testing:
+
 - Use jest-axe for a11y tests
 - Test keyboard navigation
 - Test screen reader compatibility
@@ -103,6 +117,7 @@ Accessibility Testing:
 - Use Playwright for a11y E2E tests
 
 Test Coverage:
+
 - Aim for 80%+ coverage
 - Use jest --coverage
 - Focus on critical paths
@@ -110,6 +125,7 @@ Test Coverage:
 - Don't chase 100% coverage
 
 Best Practices:
+
 - Write tests before fixing bugs
 - Test user behavior, not implementation
 - Use meaningful test descriptions

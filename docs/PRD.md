@@ -2,21 +2,25 @@
 
 ## 1. Executive Summary & Problem Statement
 
-### Executive Summary  
+### Executive Summary
+
 PayTrack is a cloud-based custom loan and payment tracking web application designed for lending business owners transitioning from manual tracking systems, typically Excel spreadsheets. This system aims to reduce errors, improve efficiency, and provide accurate insights into borrower accounts and profit allocations.
 
-### Problem Statement  
+### Problem Statement
+
 Lending business owners rely on spreadsheets to track loans, manage payments, and calculate balances. This manual process is prone to errors, lacks scalability, and is time-consuming. Additionally, existing tools do not accommodate specific profit allocation models, such as 'RC' and 'EDITH.'
 
 ---
 
 ## 2. Target Audience & Core Use Cases
 
-### Target Audience  
+### Target Audience
+
 - **Primary User**: Lending business owners using spreadsheets for loan tracking.
 - **Secondary Users (Future Consideration)**: Loan managers, borrowers (read-only view).
 
-### Core Use Cases  
+### Core Use Cases
+
 1. **Borrowers Directory**: Track and search borrowers with loan status (Active/Paid).
 
 2. **Loan Creation Wizard (The Engine)**: Create loans with automatically generated payment schedules based on two distinct business rules:
@@ -35,23 +39,23 @@ Lending business owners rely on spreadsheets to track loans, manage payments, an
 
 ## 3. V1 Scope
 
-### Must-Haves  
+### Must-Haves
 
 1. **Borrower Directory**
-   - Add, search, filter, and view borrower profiles.  
+   - Add, search, filter, and view borrower profiles.
    - Fields: Name, Contact Information, Active Loans, Status (Active/Paid).
 
-2. **Loan Creation Wizard**  
+2. **Loan Creation Wizard**
    - Guided flow for creating the two loan types (**Small ≤ 5k, Big > 5k**).
    - **Release Date Input**: The system must require the loan's "Release Date," which acts as the anchor date for generating an accurate payment schedule.
    - **Auto-Scheduling**: The system must generate expected payment dates and amounts based on the selected term (Weekly, Monthly, Bi-monthly, or Custom Months).
    - **Allocation Overrides**: UI must auto-fill RC (80%) and EDITH (20%) fields based on total interest, but these fields must be editable inputs for manual overrides before database commit.
 
-3. **One-Click Payment Logging**  
-   - **Input**: Select Borrower/Loan, Payment Amount, Date.  
+3. **One-Click Payment Logging**
+   - **Input**: Select Borrower/Loan, Payment Amount, Date.
    - **Logic**: Must accept arbitrary payment amounts (overpayments, underpayments, or irregular dates) and automatically decrement the remaining loan balance without forcing rigid adherence to the expected schedule.
 
-4. **Dashboard Overview**  
+4. **Dashboard Overview**
    - Summary of:
      - Total Active Capital
      - Total Interest Expected
@@ -61,6 +65,7 @@ Lending business owners rely on spreadsheets to track loans, manage payments, an
 ---
 
 ## 4. Out of Scope for V1
+
 1. Borrower-facing features (e.g., borrower portals or read-only dashboards).
 2. SMS/email payment reminders.
 3. Multi-user roles & permissions.
@@ -69,20 +74,24 @@ Lending business owners rely on spreadsheets to track loans, manage payments, an
 
 ---
 
-## 5. Design & UI Requirements (Modern Fintech Aesthetic)  
+## 5. Design & UI Requirements (Modern Fintech Aesthetic)
 
-### Visual Identity  
+### Visual Identity
+
 The application must feel like a premium, institutional-grade financial tool (Modern Fintech SaaS).
 
 ### Color Palette (Tailwind):
-- **Base/Background**: Crisp, high-contrast minimalist base (e.g., slate-50 or pure white for light mode) to ensure dense data tables are readable without eye strain.  
-- **Primary Brand Color**: A sophisticated, muted metallic tone (e.g., a custom Bronze or deep Champagne Gold) used sparingly for primary buttons (like "Save Loan") and active navigation states to provide a premium feel without overwhelming the data.  
-- **Semantic Colors**: Strict adherence to universally understood financial colors. High-contrast Green (e.g., emerald-600) for "Paid/Active" and Red (e.g., rose-600) for "Overdue/Deficit."  
 
-### Typography  
+- **Base/Background**: Crisp, high-contrast minimalist base (e.g., slate-50 or pure white for light mode) to ensure dense data tables are readable without eye strain.
+- **Primary Brand Color**: A sophisticated, muted metallic tone (e.g., a custom Bronze or deep Champagne Gold) used sparingly for primary buttons (like "Save Loan") and active navigation states to provide a premium feel without overwhelming the data.
+- **Semantic Colors**: Strict adherence to universally understood financial colors. High-contrast Green (e.g., emerald-600) for "Paid/Active" and Red (e.g., rose-600) for "Overdue/Deficit."
+
+### Typography
+
 Use a clean, geometric sans-serif (like Inter or Geist) with strict tabular-lining rules for all numbers so decimal points align perfectly in tables.
 
-### Layout  
+### Layout
+
 Distraction-free, card-based layouts with ample whitespace. The priority is rapid data entry and scannability for a user who may be on the go or quickly logging payments.
 
 ---

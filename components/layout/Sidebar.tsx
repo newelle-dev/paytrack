@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, CreditCard, Banknote, Menu, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  CreditCard,
+  Banknote,
+  Menu,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -12,12 +19,12 @@ const navigation = [
   { name: "Payments", href: "/payments", icon: Banknote },
 ];
 
-export function Sidebar({ 
-  collapseMenu, 
+export function Sidebar({
+  collapseMenu,
   setCollapseMenu,
-  onClose
-}: { 
-  collapseMenu: boolean; 
+  onClose,
+}: {
+  collapseMenu: boolean;
   setCollapseMenu: (v: boolean) => void;
   onClose?: () => void;
 }) {
@@ -27,18 +34,20 @@ export function Sidebar({
     <div
       className={cn(
         "flex flex-col border-r border-ivory-cream bg-ivory-light transition-all duration-300 h-full",
-        collapseMenu ? "w-20" : "w-64"
+        collapseMenu ? "w-20" : "w-64",
       )}
     >
       <div className="flex h-16 items-center justify-between px-4 border-b border-ivory-cream shrink-0">
-        {!collapseMenu && <span className="text-xl font-bold text-text-primary">PayTrack</span>}
-        
+        {!collapseMenu && (
+          <span className="text-xl font-bold text-text-primary">PayTrack</span>
+        )}
+
         {/* Desktop toggle */}
         <button
           onClick={() => setCollapseMenu(!collapseMenu)}
           className={cn(
             "p-2 text-text-secondary hover:bg-ivory hover:text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-gold",
-            "hidden lg:block"
+            "hidden lg:block",
           )}
           aria-label="Toggle sidebar"
         >
@@ -50,7 +59,7 @@ export function Sidebar({
           onClick={onClose}
           className={cn(
             "p-2 text-text-secondary hover:bg-ivory hover:text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-gold",
-            "lg:hidden"
+            "lg:hidden",
           )}
           aria-label="Close sidebar"
         >
@@ -60,7 +69,9 @@ export function Sidebar({
 
       <nav className="flex-1 space-y-1 px-4 py-4 overflow-y-auto">
         {navigation.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.name}
@@ -72,11 +83,17 @@ export function Sidebar({
                 "group flex items-center rounded-md px-2 py-2 text-sm font-medium",
                 isActive
                   ? "bg-gold text-white"
-                  : "text-text-secondary hover:bg-ivory hover:text-text-primary"
+                  : "text-text-secondary hover:bg-ivory hover:text-text-primary",
               )}
             >
               <item.icon
-                className={cn("h-6 w-6 shrink-0", collapseMenu ? "mx-auto" : "mr-3", isActive ? "text-white" : "text-text-secondary group-hover:text-text-primary")}
+                className={cn(
+                  "h-6 w-6 shrink-0",
+                  collapseMenu ? "mx-auto" : "mr-3",
+                  isActive
+                    ? "text-white"
+                    : "text-text-secondary group-hover:text-text-primary",
+                )}
                 aria-hidden="true"
               />
               {!collapseMenu && <span>{item.name}</span>}

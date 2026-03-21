@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useState, useMemo } from "react"
-import { useRouter } from "next/navigation"
-import { Search, Eye } from "lucide-react"
-import { format, parseISO } from "date-fns"
+import * as React from "react";
+import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { Search, Eye, Wallet } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { format, parseISO } from "date-fns";
 
 import {
   Table,
@@ -13,68 +14,86 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import {
-  Select
-} from "@/components/ui/select"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Select } from "@/components/ui/select";
 
 interface Borrower {
-  id: string
-  first_name: string
-  last_name: string
+  id: string;
+  first_name: string;
+  last_name: string;
 }
 
 interface Loan {
-  id: string
-  principal_amount: number
-  loan_category: string
-  status: string
-  release_date: string
-  created_at: string
-  borrower: Borrower | Borrower[] | null
-  remaining_balance: number
+  id: string;
+  principal_amount: number;
+  loan_category: string;
+  status: string;
+  release_date: string;
+  created_at: string;
+  borrower: Borrower | Borrower[] | null;
+  remaining_balance: number;
 }
 
 interface LoanListClientProps {
-  initialLoans: Loan[]
+  initialLoans: Loan[];
 }
 
 export function LoanListClient({ initialLoans }: LoanListClientProps) {
-  const router = useRouter()
-  const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
-  
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+
   const filteredLoans = useMemo(() => {
-    return initialLoans.filter(loan => {
-      const b = Array.isArray(loan.borrower) ? loan.borrower[0] : loan.borrower
-      
-      const q = search.toLowerCase()
-      const borrowerName = b ? `${b.first_name} ${b.last_name}`.toLowerCase() : ""
-      
-      const matchesSearch = borrowerName.includes(q)
-      const matchesStatus = statusFilter === "all" || loan.status.toLowerCase() === statusFilter.toLowerCase()
-      const matchesCategory = categoryFilter === "all" || loan.loan_category.toLowerCase() === categoryFilter.toLowerCase()
-      
-      return matchesSearch && matchesStatus && matchesCategory
-    })
-  }, [initialLoans, search, statusFilter, categoryFilter])
+    return initialLoans.filter((loan) => {
+      const b = Array.isArray(loan.borrower) ? loan.borrower[0] : loan.borrower;
+
+      const q = search.toLowerCase();
+      const borrowerName = b
+        ? `${b.first_name} ${b.last_name}`.toLowerCase()
+        : "";
+
+      const matchesSearch = borrowerName.includes(q);
+      const matchesStatus =
+        statusFilter === "all" ||
+        loan.status.toLowerCase() === statusFilter.toLowerCase();
+      const matchesCategory =
+        categoryFilter === "all" ||
+        loan.loan_category.toLowerCase() === categoryFilter.toLowerCase();
+
+      return matchesSearch && matchesStatus && matchesCategory;
+    });
+  }, [initialLoans, search, statusFilter, categoryFilter]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-PH", {
       style: "currency",
       currency: "PHP",
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   const getStatusVariant = (status: string) => {
-    const s = status.toLowerCase()
-    if (s === "active") return "success"
-    if (s === "defaulted") return "error"
-    return "default" // paid
+    const s = status.toLowerCase();
+    if (s === "active") return "success";
+    if (s === "defaulted") return "error";
+    return "default"; // paid
+  };
+
+  if (initialLoans.length === 0) {
+    return (
+      <div className="mt-8">
+        <EmptyState
+          icon={Wallet}
+          title="No loans yet"
+          description="Create your first loan to start tracking balances and payment schedules."
+          actionLabel="New Loan"
+          onAction={() => router.push("/loans/new")}
+        />
+      </div>
+    );
   }
 
   return (
@@ -89,10 +108,10 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        
+
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <Select 
-            value={statusFilter} 
+          <Select
+            value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             className="w-full sm:w-[130px] bg-white text-text-primary"
           >
@@ -101,9 +120,9 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
             <option value="paid">Paid</option>
             <option value="defaulted">Defaulted</option>
           </Select>
-          
-          <Select 
-            value={categoryFilter} 
+
+          <Select
+            value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             className="w-full sm:w-[140px] bg-white text-text-primary"
           >
@@ -121,9 +140,15 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
               <TableRow>
                 <TableHead className="whitespace-nowrap">Borrower</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Principal</TableHead>
-                <TableHead className="text-right whitespace-nowrap">Remaining</TableHead>
-                <TableHead className="whitespace-nowrap">Release Date</TableHead>
+                <TableHead className="text-right whitespace-nowrap">
+                  Principal
+                </TableHead>
+                <TableHead className="text-right whitespace-nowrap">
+                  Remaining
+                </TableHead>
+                <TableHead className="whitespace-nowrap">
+                  Release Date
+                </TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -131,20 +156,28 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
             <TableBody>
               {filteredLoans.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center text-text-secondary">
+                  <TableCell
+                    colSpan={7}
+                    className="h-24 text-center text-text-secondary"
+                  >
                     No loans found.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredLoans.map((loan) => {
-                  const b = Array.isArray(loan.borrower) ? loan.borrower[0] : loan.borrower;
+                  const b = Array.isArray(loan.borrower)
+                    ? loan.borrower[0]
+                    : loan.borrower;
                   return (
                     <TableRow key={loan.id} className="group">
                       <TableCell className="font-medium text-text-primary whitespace-nowrap">
                         {b ? `${b.first_name} ${b.last_name}` : "Unknown"}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="font-normal bg-ivory-light/50 border-ivory-cream text-text-secondary">
+                        <Badge
+                          variant="outline"
+                          className="font-normal bg-ivory-light/50 border-ivory-cream text-text-secondary"
+                        >
                           {loan.loan_category}
                         </Badge>
                       </TableCell>
@@ -155,7 +188,9 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
                         {formatCurrency(loan.remaining_balance)}
                       </TableCell>
                       <TableCell className="text-text-secondary whitespace-nowrap text-sm">
-                        {loan.release_date ? format(parseISO(loan.release_date), "MMM d, yyyy") : "-"}
+                        {loan.release_date
+                          ? format(parseISO(loan.release_date), "MMM d, yyyy")
+                          : "-"}
                       </TableCell>
                       <TableCell>
                         <Badge variant={getStatusVariant(loan.status)}>
@@ -174,7 +209,7 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
                         </Button>
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })
               )}
             </TableBody>
@@ -182,5 +217,5 @@ export function LoanListClient({ initialLoans }: LoanListClientProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

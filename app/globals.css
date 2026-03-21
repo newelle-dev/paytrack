@@ -2,23 +2,23 @@
 
 @theme {
   /* Ivory Palette - Base backgrounds */
-  --color-ivory: #FBFAF5;
-  --color-ivory-light: #FFFFFF;
-  --color-ivory-cream: #F3F0E5;
+  --color-ivory: #fbfaf5;
+  --color-ivory-light: #ffffff;
+  --color-ivory-cream: #f3f0e5;
 
   /* Gold Palette - Primary actions & Branding */
-  --color-gold: #C5A880;
-  --color-gold-dark: #A38862;
-  --color-gold-light: #E1CBA3;
+  --color-gold: #c5a880;
+  --color-gold-dark: #a38862;
+  --color-gold-light: #e1cba3;
 
   /* Semantic Palette - Status indicators */
-  --color-success: #27AE60;
-  --color-error: #E74C3C;
-  --color-warning: #E2A03F;
+  --color-success: #27ae60;
+  --color-error: #e74c3c;
+  --color-warning: #e2a03f;
 
   /* Text Palette */
-  --color-text-primary: #2C2C2C;
-  --color-text-secondary: #6B6B6B;
+  --color-text-primary: #2c2c2c;
+  --color-text-secondary: #6b6b6b;
 
   /* Custom Transitions & Effects */
   --animate-gold-glow: gold-glow 2s infinite;
@@ -28,8 +28,13 @@
 }
 
 @keyframes gold-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 @layer base {

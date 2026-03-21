@@ -2,7 +2,7 @@
 
 This document defines the core interfaces, mathematical calculations, and frontend state management for the "PayTrack." This serves as the absolute source of truth for frontend TypeScript state management and the utility functions required before persisting financial data to the Supabase backend.
 
---- 
+---
 
 ## 1. Core TypeScript Interfaces
 
@@ -48,44 +48,59 @@ export interface Payment {
 ## 2. Small Loan Engine (≤ 5,000)
 
 ### The Math
+
 Small loans use a **flat 10% interest** model. The `totalInterestExpected` is simple and handled in **cents** to avoid floating-point errors:
+
 ```typescript
 const totalInterestExpected = Math.round(principalAmountCents * 0.1);
 ```
+
 Convert the result back to dollars for display:
+
 ```typescript
 const totalInterest = totalInterestExpected / 100; // Convert from cents to dollars
 ```
 
 For example:
+
 - Principal: 5,000.00 (500,000 cents)
-- Total Interest: 500,000 * 0.1 = 50,000 cents -> 500.00 dollars
+- Total Interest: 500,000 \* 0.1 = 50,000 cents -> 500.00 dollars
 
 ---
 
 ### Schedule Generator
+
 The system generates a schedule based on the `releaseDate` and the selected term:
 
 #### Weekly (4 payments per month)
+
 1. Divide the `(principal + interest)` in cents into **4 equal payment amounts**.
 2. Generate payment dates by adding 7 days per interval from the `releaseDate`.
 
 ---
 
 #### 1-Month (1 payment per month)
-1. The total amount is due **exactly 1 month after the `releaseDate`**. 
+
+1. The total amount is due **exactly 1 month after the `releaseDate`**.
 
 ---
 
 #### 15th & 30th (2 payments per month)
+
 1. Allocate **half the balance to each of the two payments**.
 2. Safety logic is used to:
-    - Align the **first payment** to the next possible chronological payday: either the **15th or end of the same** month.
-    - Handle edge cases (Feb 18 -> End of Feb, April 20 -> End of April, etc.) with `date-fns` utilities like `endOfMonth`.
+   - Align the **first payment** to the next possible chronological payday: either the **15th or end of the same** month.
+   - Handle edge cases (Feb 18 -> End of Feb, April 20 -> End of April, etc.) with `date-fns` utilities like `endOfMonth`.
 
 #### Implementation Example
+
 ```typescript
-function generateSmallLoanSchedule(principalCents: number, totalInterestCents: number, releaseDate: string, termType: "Weekly" | "1-Month" | "15th-30th"): Schedule[] {
+function generateSmallLoanSchedule(
+  principalCents: number,
+  totalInterestCents: number,
+  releaseDate: string,
+  termType: "Weekly" | "1-Month" | "15th-30th",
+): Schedule[] {
   const schedules: Schedule[] = [];
   const totalCents = principalCents + totalInterestCents;
 
@@ -115,8 +130,16 @@ function generateSmallLoanSchedule(principalCents: number, totalInterestCents: n
       const halfPayment = Math.round(totalCents / 2);
 
       schedules.push(
-        { id: generateUUID(), expectedDate: firstPayday, expectedAmount: halfPayment / 100 },
-        { id: generateUUID(), expectedDate: secondPayday, expectedAmount: halfPayment / 100 }
+        {
+          id: generateUUID(),
+          expectedDate: firstPayday,
+          expectedAmount: halfPayment / 100,
+        },
+        {
+          id: generateUUID(),
+          expectedDate: secondPayday,
+          expectedAmount: halfPayment / 100,
+        },
       );
       break;
     }
@@ -131,12 +154,14 @@ function generateSmallLoanSchedule(principalCents: number, totalInterestCents: n
 ## 3. Big Loan Engine (> 5,000)
 
 ### The Math (Amortization)
+
 - Divide the `principal` into **equal monthly payments (principal amortization)**. The loan's `termType` is set to `"Custom"` with a specific number of months (`numMonths`).
 - Calculate interest per month using the **remaining loan balance**.
 
 Additionally, we must track a running total of the interest (`accumulatedInterestCents`) inside the calculation loop to pass to the RC/EDITH allocator.
 
 #### Example: 50,000 Loan, 5 Months
+
 - Principal: 50,000 (5,000,000 cents)
 - Amortized Principal: 10,000 per month (1,000,000 cents)
 - Month 1: 10,000 + (10% of 50,000) = 15,000
@@ -146,8 +171,13 @@ Additionally, we must track a running total of the interest (`accumulatedInteres
 ---
 
 #### Implementation Example
+
 ```typescript
-function generateBigLoanSchedule(principalCents: number, releaseDate: string, numMonths: number): { schedule: Schedule[], totalInterestCents: number } {
+function generateBigLoanSchedule(
+  principalCents: number,
+  releaseDate: string,
+  numMonths: number,
+): { schedule: Schedule[]; totalInterestCents: number } {
   const schedules: Schedule[] = [];
   const monthlyPrincipalCents = Math.round(principalCents / numMonths);
   let remainingPrincipalCents = principalCents;
@@ -175,19 +205,24 @@ function generateBigLoanSchedule(principalCents: number, releaseDate: string, nu
 ## 4. Profit Allocation State Management (RC & EDITH)
 
 ### Profit Allocation
+
 Convert `totalInterestExpected` to cents and calculate:
+
 - **RC (80%)**: `rcAllocationCents = Math.round(totalInterestCents * 0.8)`
 - **EDITH (20%)**: `edithAllocationCents = Math.round(totalInterestCents * 0.2)`
 
 Examples:
+
 - Total Interest: 5,000 cents -> RC: 4,000 cents (40.00), EDITH: 1,000 cents (10.00)
 
 ---
 
 ### Manual Overrides
+
 Form state must enforce validation:
+
 ```typescript
-if ((newRcCents + newEdithCents) !== totalInterestCents) {
+if (newRcCents + newEdithCents !== totalInterestCents) {
   throw new Error("Profit allocations must total the expected interest.");
 }
 ```
@@ -195,6 +230,7 @@ if ((newRcCents + newEdithCents) !== totalInterestCents) {
 ---
 
 ### UI and Save Flow
+
 1. Calculate RC/EDITH allocations automatically after running loan calculations.
 2. Allow the user to override exact dollar values before the save.
 3. Convert from cents back to standard decimals (`/ 100`) right before the Supabase `.insert()` payload.

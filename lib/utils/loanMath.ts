@@ -16,8 +16,7 @@ export interface LoanCalculationResult {
 // --- Internal Helper: Calculate RC & EDITH Allocations ---
 function calculateAllocations(totalInterestCents: number) {
   const rcCents = Math.round(totalInterestCents * 0.8);
-  const edithCents = Math.round(totalInterestCents * 0.2);
-  
+
   // Failsafe: Ensure splits perfectly match the total (fixes potential rounding drift)
   const adjustedEdithCents = totalInterestCents - rcCents;
 
@@ -31,12 +30,12 @@ function calculateAllocations(totalInterestCents: number) {
 export function calculateSmallLoan(
   principal: number,
   releaseDateStr: string,
-  termType: "Weekly" | "1-Month" | "Semi-Monthly"
+  termType: "Weekly" | "1-Month" | "Semi-Monthly",
 ): LoanCalculationResult {
   const principalCents = Math.round(principal * 100);
   const interestCents = Math.round(principalCents * 0.1); // Flat 10%
   const totalCents = principalCents + interestCents;
-  
+
   const releaseDate = startOfDay(parseISO(releaseDateStr));
   const schedules: ScheduleInput[] = [];
 
@@ -73,8 +72,14 @@ export function calculateSmallLoan(
 
       const halfPaymentCents = Math.round(totalCents / 2);
       schedules.push(
-        { expectedDate: firstPayday.toISOString(), expectedAmount: halfPaymentCents / 100 },
-        { expectedDate: secondPayday.toISOString(), expectedAmount: (totalCents - halfPaymentCents) / 100 }
+        {
+          expectedDate: firstPayday.toISOString(),
+          expectedAmount: halfPaymentCents / 100,
+        },
+        {
+          expectedDate: secondPayday.toISOString(),
+          expectedAmount: (totalCents - halfPaymentCents) / 100,
+        },
       );
       break;
     }
@@ -94,14 +99,14 @@ export function calculateSmallLoan(
 export function calculateBigLoan(
   principal: number,
   releaseDateStr: string,
-  numMonths: number
+  numMonths: number,
 ): LoanCalculationResult {
   const principalCents = Math.round(principal * 100);
   const releaseDate = startOfDay(parseISO(releaseDateStr));
-  
+
   const schedules: ScheduleInput[] = [];
   const monthlyPrincipalCents = Math.round(principalCents / numMonths);
-  
+
   let remainingPrincipalCents = principalCents;
   let accumulatedInterestCents = 0;
 
@@ -111,7 +116,8 @@ export function calculateBigLoan(
     accumulatedInterestCents += interestCents;
 
     // 2. Determine Principal Payment (Sweeper handles the final month rounding dust)
-    const currentPrincipalPayment = i === numMonths ? remainingPrincipalCents : monthlyPrincipalCents;
+    const currentPrincipalPayment =
+      i === numMonths ? remainingPrincipalCents : monthlyPrincipalCents;
     const totalPaymentCents = currentPrincipalPayment + interestCents;
 
     // 3. Add to Schedule
@@ -124,7 +130,9 @@ export function calculateBigLoan(
     remainingPrincipalCents -= currentPrincipalPayment;
   }
 
-  const { rcAllocation, edithAllocation } = calculateAllocations(accumulatedInterestCents);
+  const { rcAllocation, edithAllocation } = calculateAllocations(
+    accumulatedInterestCents,
+  );
 
   return {
     schedules,

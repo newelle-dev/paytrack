@@ -17,14 +17,14 @@ The application is built on a **"Luxurious Metallic Gold"** and **"Gilded Ivory"
 - **Metallic Gold Accents**: Sophisticated branding and primary actions.
 - **Tabular Precision**: Strictly aligned numerical data for financial accuracy.
 
-![PayTrack Preview](C:\Users\alec\.gemini\antigravity\brain\fd8bc3cf-1969-480b-8963-2ee793671cbd\arzi_dashboard_preview_1774024242010.png)
+![PayTrack Preview](C:\Users\alec.gemini\antigravity\brain\fd8bc3cf-1969-480b-8963-2ee793671cbd\arzi_dashboard_preview_1774024242010.png)
 
 ---
 
 ## 🚀 Key Features
 
 - **👤 Borrower Directory**: Centralized management of borrower profiles with real-time status tracking (Active/Paid).
-- **⚙️ The Calculation Engine**: 
+- **⚙️ The Calculation Engine**:
   - **Small Loans (≤ 5k)**: Automatic 10% flat interest with flexible weekly/monthly schedules.
   - **Big Loans (> 5k)**: Amortized principal with declining interest models.
 - **💎 Profit Allocation (RC & EDITH)**: Automated 80/20 split of interest income, allowing for manual monetary overrides.
@@ -62,10 +62,12 @@ The application is built on a **"Luxurious Metallic Gold"** and **"Gilded Ivory"
 ## 🏁 Getting Started
 
 ### Prerequisites
+
 - Node.js 20+
 - npm/pnpm/yarn
 
 ### Installation
+
 1. Clone the repository
 2. Install dependencies:
    ```bash
@@ -73,10 +75,13 @@ The application is built on a **"Luxurious Metallic Gold"** and **"Gilded Ivory"
    ```
 
 ### Development
+
 Run the development server:
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ---
@@ -84,6 +89,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## 📄 Documentation
 
 For deep dives into specific areas, refer to the following documents:
+
 - [Product Requirements](./docs/PRD.md)
 - [Business Logic & Calculations](./docs/BUSINESS_LOGIC.md)
 - [Database Schema](./docs/DATABASE-SCHEMA.md)
