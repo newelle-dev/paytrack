@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { Plus, Search, MoreHorizontal, Eye, Trash2 } from "lucide-react"
+import { Plus, Search, MoreHorizontal, Eye, Trash2, UserPlus } from "lucide-react"
 import { format } from "date-fns"
 
 import {
@@ -61,23 +61,35 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Search and Action Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-text-secondary" />
-          <Input
-            placeholder="Search borrowers..."
-            className="pl-9"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-text-primary tracking-tight">Borrower Directory</h1>
+          <p className="text-sm text-text-secondary mt-1">
+            Manage your clients, view their loan history, and update contact information.
+          </p>
         </div>
-        <Button onClick={() => setIsAddModalOpen(true)} className="w-full sm:w-auto">
-          <Plus className="mr-2 h-4 w-4" />
+        
+        <Button onClick={() => setIsAddModalOpen(true)} className="bg-gold hover:bg-gold/90 text-white border-0">
+          <UserPlus className="mr-2 h-4 w-4" />
           Add Borrower
         </Button>
       </div>
+
+      <div className="flex flex-col gap-4">
+        {/* Search and Action Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="relative w-full sm:max-w-xs">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-text-secondary" />
+            <Input
+              placeholder="Search borrowers..."
+              className="pl-9"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
 
       {/* Main Table Content */}
       <div className="rounded-lg border border-ivory-cream bg-white shadow-sm overflow-hidden">
@@ -157,5 +169,6 @@ export function BorrowersClient({ initialBorrowers }: BorrowersClientProps) {
         onClose={() => setIsAddModalOpen(false)}
       />
     </div>
-  )
+  </div>
+)
 }

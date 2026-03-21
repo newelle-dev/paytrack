@@ -24,6 +24,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { markLoanAsPaid } from "@/app/(dashboard)/loans/actions"
+import { PaymentModal } from "@/components/payment-modal"
+import { ReceiptText, History } from "lucide-react"
 
 interface Borrower {
   id: string
@@ -40,6 +42,15 @@ interface Schedule {
   created_at: string
 }
 
+interface Payment {
+  id: string
+  amount_paid: number
+  date_paid: string
+  payment_method: string | null
+  notes: string | null
+  created_at: string
+}
+
 interface Loan {
   id: string
   principal_amount: number
@@ -53,6 +64,7 @@ interface Loan {
   edith_allocation: number
   borrower: Borrower
   schedules: Schedule[]
+  payments: Payment[]
   remaining_balance: number
 }
 
@@ -64,6 +76,7 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
   const router = useRouter()
   const loan = initialData
   const [isMarkingPaid, setIsMarkingPaid] = useState(false)
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-PH", {
@@ -93,7 +106,7 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
@@ -121,17 +134,36 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
           </Badge>
           
           {loan.status.toLowerCase() === "active" && (
-            <Button 
-              onClick={handleMarkAsPaid} 
-              disabled={isMarkingPaid}
-              className="bg-gold hover:bg-gold/90 text-white"
-            >
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              {isMarkingPaid ? "Updating..." : "Mark as Paid"}
-            </Button>
+            <>
+              <Button 
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="bg-gold hover:bg-gold/90 text-white border-0"
+              >
+                <ReceiptText className="mr-2 h-4 w-4" />
+                Log Payment
+              </Button>
+              
+              <Button 
+                variant="outline"
+                onClick={handleMarkAsPaid} 
+                disabled={isMarkingPaid}
+                className="border-ivory-cream text-text-secondary hover:bg-ivory-cream/20"
+              >
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+                {isMarkingPaid ? "Updating..." : "Mark as Paid"}
+              </Button>
+            </>
           )}
         </div>
       </div>
+
+      <PaymentModal 
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        loanId={loan.id}
+        borrowerName={`${loan.borrower?.first_name} ${loan.borrower?.last_name}`}
+        remainingBalance={loan.remaining_balance}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Left Column: Loan Summary & Borrower Info */}
@@ -263,6 +295,66 @@ export function LoanDetailClient({ initialData }: LoanDetailClientProps) {
                           {formatCurrency(schedule.expected_amount)}
                         </TableCell>
                       </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          {/* Payment History Card */}
+          <Card className="mt-6">
+            <CardHeader className="pb-3 border-b border-ivory-cream">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg text-text-primary flex items-center gap-2">
+                    <History className="h-5 w-5 text-gold" />
+                    Payment History
+                  </CardTitle>
+                  <CardDescription>
+                    History of payments received for this loan
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0 px-0">
+              <Table>
+                <TableHeader className="bg-ivory-light">
+                  <TableRow>
+                    <TableHead className="pl-6">Date</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead className="text-right pr-6">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {loan.payments.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={3} className="h-24 text-center text-text-secondary">
+                        No payments logged yet.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    loan.payments.map((payment) => (
+                      <React.Fragment key={payment.id}>
+                        <TableRow className="border-b-0">
+                          <TableCell className="pl-6 text-text-primary font-medium">
+                            {format(parseISO(payment.date_paid), "MMM d, yyyy")}
+                          </TableCell>
+                          <TableCell className="text-text-secondary text-sm">
+                            {payment.payment_method || "-"}
+                          </TableCell>
+                          <TableCell className="text-right pr-6 font-mono font-bold text-success">
+                            + {formatCurrency(payment.amount_paid)}
+                          </TableCell>
+                        </TableRow>
+                        {payment.notes && (
+                          <TableRow className="border-t-0 hover:bg-transparent">
+                            <TableCell colSpan={3} className="pl-6 pb-3 pt-0 text-xs text-text-secondary italic">
+                              Note: {payment.notes}
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
                     ))
                   )}
                 </TableBody>

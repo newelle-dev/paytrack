@@ -31,6 +31,14 @@ export default async function LoanDetailPage({
         expected_date,
         expected_amount,
         created_at
+      ),
+      payments (
+        id,
+        amount_paid,
+        date_paid,
+        payment_method,
+        notes,
+        created_at
       )
     `)
     .eq("id", id)
@@ -41,14 +49,23 @@ export default async function LoanDetailPage({
     notFound()
   }
 
-  // Calculate generic remaining balance (since phase 6 handles payments, we just sum up expected_amount as a fallback for now)
-  const remainingBalance = loan.schedules?.reduce((sum: number, sch: { expected_amount: string | number }) => sum + Number(sch.expected_amount), 0) || 0;
+  // Calculate generic remaining balance
+  const totalExpected = Number(loan.principal_amount) + Number(loan.total_interest_expected)
+  const totalPaid = loan.payments?.reduce((sum: number, p: { amount_paid: string | number }) => sum + Number(p.amount_paid), 0) || 0
+  const remainingBalance = Math.max(0, totalExpected - totalPaid);
   
   const formattedLoan = {
     ...loan,
     remaining_balance: remainingBalance,
     // Ensure schedule is ordered by date
     schedules: loan.schedules?.sort((a: { expected_date: string }, b: { expected_date: string }) => new Date(a.expected_date).getTime() - new Date(b.expected_date).getTime()) || [],
+    payments: loan.payments?.sort((a: { date_paid: string, created_at: string }, b: { date_paid: string, created_at: string }) => {
+      const dateDiff = new Date(b.date_paid).getTime() - new Date(a.date_paid).getTime()
+      if (dateDiff === 0) {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      }
+      return dateDiff
+    }) || [],
     borrower: Array.isArray(loan.borrower) ? loan.borrower[0] : loan.borrower
   }
 

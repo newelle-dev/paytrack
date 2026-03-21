@@ -105,3 +105,80 @@ export async function markLoanAsPaid(loanId: string) {
 
   return { success: true }
 }
+
+type LogPaymentPayload = {
+  loanId: string
+  amountPaid: number
+  datePaid: string
+  paymentMethod?: string
+  notes?: string
+}
+
+export async function logPayment(payload: LogPaymentPayload) {
+  const supabase = await createClient()
+
+  // 1. Verify User
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return { error: "You must be logged in to log a payment." }
+  }
+
+  // 2. Validate payload
+  if (!payload.loanId || payload.amountPaid <= 0 || !payload.datePaid) {
+    return { error: "Invalid payment details provided." }
+  }
+
+  // 3. Insert Payment record
+  const { error: paymentError } = await supabase
+    .from("payments")
+    .insert({
+      loan_id: payload.loanId,
+      amount_paid: payload.amountPaid,
+      date_paid: payload.datePaid,
+      payment_method: payload.paymentMethod || null,
+      notes: payload.notes || null,
+    })
+
+  if (paymentError) {
+    console.error("Supabase Payment Insert Error:", paymentError)
+    return { error: "Failed to log payment. " + paymentError.message }
+  }
+
+  // 4. Check if loan is fully paid
+  const { data: loan, error: loanError } = await supabase
+    .from("loans")
+    .select("borrower_id, principal_amount, total_interest_expected, status")
+    .eq("id", payload.loanId)
+    .single()
+
+  if (loan && !loanError && loan.status === "Active") {
+    // Fetch total paid
+    const { data: payments, error: paymentsError } = await supabase
+      .from("payments")
+      .select("amount_paid")
+      .eq("loan_id", payload.loanId)
+
+    if (!paymentsError && payments) {
+      const totalPaid = payments.reduce((sum, p) => sum + Number(p.amount_paid), 0)
+      const totalRequired = Number(loan.principal_amount) + Number(loan.total_interest_expected)
+
+      if (totalPaid >= totalRequired) {
+        // Mark as paid
+        await supabase
+          .from("loans")
+          .update({ status: "Paid" })
+          .eq("id", payload.loanId)
+          .eq("user_id", user.id)
+      }
+    }
+  }
+
+  // 5. Revalidate cache
+  revalidatePath("/loans")
+  revalidatePath(`/loans/${payload.loanId}`)
+  if (loan?.borrower_id) {
+    revalidatePath(`/borrowers/${loan.borrower_id}`)
+  }
+
+  return { success: true }
+}

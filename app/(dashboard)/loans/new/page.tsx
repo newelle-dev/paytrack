@@ -1,6 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 import { LoanWizard } from "@/components/loans/wizard/loan-wizard"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export const metadata = {
   title: "New Loan | PayTrack",
@@ -27,8 +31,14 @@ export default async function NewLoanPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full">
+      <div className="flex items-center gap-4">
+        <Link 
+          href="/loans" 
+          className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-8 w-8 text-text-secondary")}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Link>
         <div>
           <h1 className="text-2xl font-semibold text-text-primary tracking-tight">Create New Loan</h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -37,7 +47,9 @@ export default async function NewLoanPage() {
         </div>
       </div>
 
-      <LoanWizard initialBorrowers={borrowers || []} />
+      <div className="w-full">
+        <LoanWizard initialBorrowers={borrowers || []} />
+      </div>
     </div>
   )
 }

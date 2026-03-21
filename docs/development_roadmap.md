@@ -16,7 +16,9 @@
 | Phase 2: Authentication | ✅ Done |
 | Phase 3: Borrower Directory | ✅ Done |
 | Phase 4: Loan Creation Wizard | ✅ Done |
-| Phase 5: Loan Management | 🚧 In Progress |
+| Phase 5: Loan Management | ✅ Done |
+| Phase 6: Payment Logging | ✅ Done |
+| Phase 7: Dashboard Overview | 🚧 In Progress |
 
 ---
 
@@ -95,6 +97,8 @@
 | 6.1 | **Payment Modal** | Accessible from the Loan Detail page or a global "Log Payment" button. Fields: Borrower/Loan selector, Amount, Date, Method, Notes. Follows the modal spec in `UI_ARCHITECTURE_DESIGN.md`. |
 | 6.2 | **Payment Server Action** | Insert into `payments` table. Automatically recalculate remaining balance (sum of `expected_amount` − sum of `amount_paid`). |
 | 6.3 | **Payment History** | Chronological ledger on the Loan Detail page and Borrower Detail page. |
+
+✅ **Phase 6 Complete**
 
 > **Estimated effort:** ~1–2 sessions
 

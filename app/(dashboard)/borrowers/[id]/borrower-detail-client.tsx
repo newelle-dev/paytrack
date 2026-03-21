@@ -49,6 +49,23 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
     (loan.payments || []).map((p: any) => ({ ...p, loan_id: loan.id, loan_category: loan.loan_category }))
   ).sort((a, b) => new Date(b.date_paid).getTime() - new Date(a.date_paid).getTime())
 
+  // Calculate aggregates
+  const activeLoans = borrower.loans.filter(l => l.status === "Active")
+  const totalPrincipal = activeLoans.reduce((sum, l) => sum + Number(l.principal_amount), 0)
+  
+  const totalRemaining = activeLoans.reduce((sum, l) => {
+    const totalReq = Number(l.principal_amount) + Number(l.total_interest_expected)
+    const paid = l.payments?.reduce((s: number, p: any) => s + Number(p.amount_paid), 0) || 0
+    return sum + Math.max(0, totalReq - paid)
+  }, 0)
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-PH", {
+      style: "currency",
+      currency: "PHP",
+    }).format(amount)
+  }
+
   async function handleDelete() {
     if (confirm("Are you sure you want to delete this borrower? All their loans and payments will be removed.")) {
       const formData = new FormData()
@@ -80,7 +97,7 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={() => router.push("/borrowers")} className="h-8 w-8 text-text-secondary">
           <ArrowLeft className="h-4 w-4" />
@@ -127,6 +144,25 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
           </div>
         </Card>
 
+        {/* Aggregate Stats Card */}
+        <Card className="col-span-1 p-6 flex flex-col gap-4 border border-ivory-cream bg-ivory-light shadow-sm rounded-lg">
+          <h2 className="text-lg font-medium text-text-primary">Loan Totals (Active)</h2>
+          <div className="space-y-4">
+            <div>
+              <p className="text-2xl font-mono font-bold text-text-primary">
+                {formatCurrency(totalPrincipal)}
+              </p>
+              <p className="text-xs text-text-secondary uppercase tracking-wider">Total Principal</p>
+            </div>
+            <div className="pt-2 border-t border-ivory-cream">
+              <p className="text-2xl font-mono font-bold text-gold">
+                {formatCurrency(totalRemaining)}
+              </p>
+              <p className="text-xs text-text-secondary uppercase tracking-wider">Total Remaining Balance</p>
+            </div>
+          </div>
+        </Card>
+
         {/* Tabbed Content */}
         <div className="col-span-1 md:col-span-2 flex flex-col gap-4">
           <div className="flex border-b border-ivory-cream">
@@ -151,7 +187,7 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
                   <TableRow>
                     <TableHead>Category</TableHead>
                     <TableHead>Principal</TableHead>
-                    <TableHead>Term</TableHead>
+                    <TableHead>Remaining</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Created</TableHead>
                   </TableRow>
@@ -162,19 +198,27 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
                       <TableCell colSpan={5} className="text-center h-24 text-text-secondary">No loans found.</TableCell>
                     </TableRow>
                   ) : (
-                    borrower.loans.map((loan) => (
-                      <TableRow key={loan.id}>
-                        <TableCell className="font-medium text-text-primary">{loan.loan_category}</TableCell>
-                        <TableCell className="tabular-nums">₱{loan.principal_amount.toLocaleString()}</TableCell>
-                        <TableCell>{loan.term_type}</TableCell>
-                        <TableCell>
-                          <Badge variant="default" className={loan.status === "Active" ? "bg-gold text-white" : "bg-green-600 text-white"}>
-                            {loan.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-text-secondary">{format(new Date(loan.created_at), "MMM d, yyyy")}</TableCell>
-                      </TableRow>
-                    ))
+                    borrower.loans.map((loan) => {
+                      const totalReq = Number(loan.principal_amount) + Number(loan.total_interest_expected)
+                      const paid = loan.payments?.reduce((s: number, p: any) => s + Number(p.amount_paid), 0) || 0
+                      const remaining = Math.max(0, totalReq - paid)
+
+                      return (
+                        <TableRow key={loan.id} className="cursor-pointer hover:bg-ivory-light/50" onClick={() => router.push(`/loans/${loan.id}`)}>
+                          <TableCell className="font-medium text-text-primary">{loan.loan_category}</TableCell>
+                          <TableCell className="tabular-nums font-mono">{formatCurrency(loan.principal_amount)}</TableCell>
+                          <TableCell className="tabular-nums font-mono font-semibold text-text-primary">
+                            {formatCurrency(remaining)}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="default" className={loan.status === "Active" ? "bg-gold text-white" : "bg-green-600 text-white"}>
+                              {loan.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-text-secondary">{format(new Date(loan.created_at), "MMM d, yyyy")}</TableCell>
+                        </TableRow>
+                      )
+                    })
                   )}
                 </TableBody>
               </Table>

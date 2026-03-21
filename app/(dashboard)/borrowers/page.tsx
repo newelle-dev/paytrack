@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { BorrowersClient } from "./borrowers-client"
+import { Button } from "@/components/ui/button"
+import { UserPlus } from "lucide-react"
 
 export default async function BorrowersPage() {
   const supabase = await createClient()
@@ -40,17 +42,6 @@ export default async function BorrowersPage() {
   }))
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-text-primary tracking-tight">Borrower Directory</h1>
-          <p className="text-sm text-text-secondary mt-1">
-            Manage your clients, view their loan history, and update contact information.
-          </p>
-        </div>
-      </div>
-
-      <BorrowersClient initialBorrowers={formattedBorrowers} />
-    </div>
+    <BorrowersClient initialBorrowers={formattedBorrowers} />
   )
 }
