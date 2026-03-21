@@ -165,7 +165,7 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
                     borrower.loans.map((loan) => (
                       <TableRow key={loan.id}>
                         <TableCell className="font-medium text-text-primary">{loan.loan_category}</TableCell>
-                        <TableCell className="tabular-nums">${loan.principal_amount.toLocaleString()}</TableCell>
+                        <TableCell className="tabular-nums">₱{loan.principal_amount.toLocaleString()}</TableCell>
                         <TableCell>{loan.term_type}</TableCell>
                         <TableCell>
                           <Badge variant="default" className={loan.status === "Active" ? "bg-gold text-white" : "bg-green-600 text-white"}>
@@ -199,7 +199,7 @@ export function BorrowerDetailClient({ initialData }: BorrowerDetailClientProps)
                     allPayments.map((payment) => (
                       <TableRow key={payment.id}>
                         <TableCell className="text-text-secondary">{format(new Date(payment.date_paid), "MMM d, yyyy")}</TableCell>
-                        <TableCell className="tabular-nums font-medium text-text-primary">${payment.amount_paid.toLocaleString()}</TableCell>
+                        <TableCell className="tabular-nums font-medium text-text-primary">₱{payment.amount_paid.toLocaleString()}</TableCell>
                         <TableCell>{payment.payment_method || "-"}</TableCell>
                         <TableCell className="text-xs text-text-secondary">{payment.loan_category}</TableCell>
                       </TableRow>

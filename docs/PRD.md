@@ -3,7 +3,7 @@
 ## 1. Executive Summary & Problem Statement
 
 ### Executive Summary  
-Arzi Business Dashboard is a cloud-based custom loan and payment tracking web application designed for lending business owners transitioning from manual tracking systems, typically Excel spreadsheets. This system aims to reduce errors, improve efficiency, and provide accurate insights into borrower accounts and profit allocations.
+PayTrack is a cloud-based custom loan and payment tracking web application designed for lending business owners transitioning from manual tracking systems, typically Excel spreadsheets. This system aims to reduce errors, improve efficiency, and provide accurate insights into borrower accounts and profit allocations.
 
 ### Problem Statement  
 Lending business owners rely on spreadsheets to track loans, manage payments, and calculate balances. This manual process is prone to errors, lacks scalability, and is time-consuming. Additionally, existing tools do not accommodate specific profit allocation models, such as 'RC' and 'EDITH.'
@@ -87,4 +87,4 @@ Distraction-free, card-based layouts with ample whitespace. The priority is rapi
 
 ---
 
-This PRD for Arzi Business Dashboard maintains focus on delivering a scalable, minimalistic solution catering to lending business owners' core needs, while providing a refined and modern fintech-inspired aesthetic.
+This PRD for PayTrack maintains focus on delivering a scalable, minimalistic solution catering to lending business owners' core needs, while providing a refined and modern fintech-inspired aesthetic.

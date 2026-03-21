@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Arzi Business Dashboard",
-  description: "Arzi Business Dashboard - Fintech application",
+  title: "PayTrack",
+  description: "PayTrack - Fintech application",
 };
 
 export default function RootLayout({

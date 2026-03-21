@@ -1,4 +1,4 @@
-# Arzi Business Dashboard — Development Roadmap
+# PayTrack — Development Roadmap
 
 > A phased timeline to go from the current scaffold to a fully functional V1.
 
@@ -14,12 +14,13 @@
 | Loan math engine (`loanMath.ts`) | ✅ Done |
 | Phase 1: Design System & Layout Shell | ✅ Done |
 | Phase 2: Authentication | ✅ Done |
-| Phase 3: Borrower Directory | 🚧 In Progress |
+| Phase 3: Borrower Directory | ✅ Done |
+| Phase 4: Loan Creation Wizard | 🚧 In Progress |
 
 ---
 
 ## Phase 1 — Design System & Layout Shell
-**Goal:** Establish the global visual foundation described in [UI_ARCHITECTURE_DESIGN.md](file:///c:/Users/alec/Desktop/Projects/arzi-business-dashboard/docs/UI_ARCHITECTURE_DESIGN.md) and the app-wide navigation shell.
+**Goal:** Establish the global visual foundation described in [UI_ARCHITECTURE_DESIGN.md](file:///c:/Users/alec/Desktop/Projects/paytrack/docs/UI_ARCHITECTURE_DESIGN.md) and the app-wide navigation shell.
 
 | # | Task | Details |
 |---|---|---|
@@ -58,7 +59,7 @@
 ---
 
 ## Phase 4 — Loan Creation Wizard *(The Engine)*
-**Goal:** Implement the two-track loan creation flow described in [BUSINESS_LOGIC.md](file:///c:/Users/alec/Desktop/Projects/arzi-business-dashboard/docs/BUSINESS_LOGIC.md).
+**Goal:** Implement the two-track loan creation flow described in [BUSINESS_LOGIC.md](file:///c:/Users/alec/Desktop/Projects/paytrack/docs/BUSINESS_LOGIC.md).
 
 | # | Task | Details |
 |---|---|---|
@@ -130,7 +131,7 @@
 
 ```mermaid
 gantt
-    title Arzi Business Dashboard — Build Timeline
+    title PayTrack — Build Timeline
     dateFormat  YYYY-MM-DD
     axisFormat  %b %d
 

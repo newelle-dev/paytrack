@@ -1,6 +1,6 @@
-# Business Logic & Calculation Engine for Arzi Business Dashboard
+# Business Logic & Calculation Engine for PayTrack
 
-This document defines the core interfaces, mathematical calculations, and frontend state management for the "Arzi Business Dashboard." This serves as the absolute source of truth for frontend TypeScript state management and the utility functions required before persisting financial data to the Supabase backend.
+This document defines the core interfaces, mathematical calculations, and frontend state management for the "PayTrack." This serves as the absolute source of truth for frontend TypeScript state management and the utility functions required before persisting financial data to the Supabase backend.
 
 --- 
 

@@ -31,7 +31,7 @@ export function Sidebar({
       )}
     >
       <div className="flex h-16 items-center justify-between px-4 border-b border-ivory-cream shrink-0">
-        {!collapseMenu && <span className="text-xl font-bold text-text-primary">Arzi</span>}
+        {!collapseMenu && <span className="text-xl font-bold text-text-primary">PayTrack</span>}
         
         {/* Desktop toggle */}
         <button

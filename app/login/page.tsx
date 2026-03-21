@@ -14,7 +14,7 @@ export default async function LoginPage({
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 mx-auto min-h-screen">
       <Card className="w-full bg-ivory-light shadow-xl border-gold/20">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-center text-gold-dark">Welcome to Arzi</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-center text-gold-dark">Welcome to PayTrack</CardTitle>
           <CardDescription className="text-center text-text-secondary">
             Sign in to manage your business dashboard
           </CardDescription>

@@ -1,6 +1,6 @@
-# Database Schema for Arzi Business Dashboard
+# Database Schema for PayTrack
 
-This document outlines the production-ready PostgreSQL schema for the "Arzi Business Dashboard" application, designed to ensure strict financial data integrity while handling highly flexible loan and payment processes. The improvements below address critical gaps, ensuring security, clean data design, and real-world usability. Supabase will manage authentication and access control, leveraging `auth.uid()` for RLS.
+This document outlines the production-ready PostgreSQL schema for the "PayTrack" application, designed to ensure strict financial data integrity while handling highly flexible loan and payment processes. The improvements below address critical gaps, ensuring security, clean data design, and real-world usability. Supabase will manage authentication and access control, leveraging `auth.uid()` for RLS.
 
 ---
 

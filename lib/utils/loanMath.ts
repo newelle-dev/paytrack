@@ -1,4 +1,4 @@
-import { addDays, addMonths, endOfMonth, setDate, isAfter, startOfDay, parseISO } from "date-fns";
+import { addDays, addMonths, startOfDay, parseISO } from "date-fns";
 
 // --- Types ---
 export interface ScheduleInput {
@@ -31,7 +31,7 @@ function calculateAllocations(totalInterestCents: number) {
 export function calculateSmallLoan(
   principal: number,
   releaseDateStr: string,
-  termType: "Weekly" | "1-Month" | "15th-30th"
+  termType: "Weekly" | "1-Month" | "Semi-Monthly"
 ): LoanCalculationResult {
   const principalCents = Math.round(principal * 100);
   const interestCents = Math.round(principalCents * 0.1); // Flat 10%
@@ -65,27 +65,11 @@ export function calculateSmallLoan(
       break;
     }
 
-    case "15th-30th": {
-      const currentMonth15th = setDate(releaseDate, 15);
-      // Ensure currentMonthEnd is at start of day (00:00:00) 
-      // otherwise, endOfMonth returns 23:59:59.999 which breaks the isAfter checks and ISO roll-overs!
-      const currentMonthEnd = startOfDay(endOfMonth(releaseDate));
-
-      let firstPayday: Date;
-      let secondPayday: Date;
-
-      // Find the next chronological paydays
-      if (isAfter(currentMonth15th, releaseDate)) {
-        firstPayday = currentMonth15th;
-        secondPayday = currentMonthEnd;
-      } else if (isAfter(currentMonthEnd, releaseDate)) {
-        firstPayday = currentMonthEnd;
-        secondPayday = setDate(addMonths(releaseDate, 1), 15);
-      } else {
-        // Edge case: Release date IS the exact end of the month
-        firstPayday = setDate(addMonths(releaseDate, 1), 15);
-        secondPayday = startOfDay(endOfMonth(addMonths(releaseDate, 1)));
-      }
+    case "Semi-Monthly": {
+      // 1st payment is 15 days after release date
+      const firstPayday = addDays(releaseDate, 15);
+      // 2nd payment is exactly 1 month after release date
+      const secondPayday = addMonths(releaseDate, 1);
 
       const halfPaymentCents = Math.round(totalCents / 2);
       schedules.push(

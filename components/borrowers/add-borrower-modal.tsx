@@ -59,12 +59,12 @@ export function AddBorrowerModal({ isOpen, onClose }: AddBorrowerModalProps) {
         
         <div className="space-y-1.5">
           <label htmlFor="email" className="text-xs font-medium text-text-secondary">Email Address</label>
-          <Input id="email" name="email" type="email" placeholder="john@example.com" disabled={pending} />
+          <Input id="email" name="email" type="email" placeholder="johndoe@example.com" disabled={pending} />
         </div>
         
         <div className="space-y-1.5">
           <label htmlFor="phone_number" className="text-xs font-medium text-text-secondary">Phone Number</label>
-          <Input id="phone_number" name="phone_number" type="tel" placeholder="+1 (555) 000-0000" disabled={pending} />
+          <Input id="phone_number" name="phone_number" type="tel" placeholder="+63 (908) 754-7562" disabled={pending} />
         </div>
         
         <div className="pt-4 flex justify-end gap-3">

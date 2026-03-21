@@ -1,5 +1,5 @@
-# UI Architecture & Design System for Arzi Business Dashboard  
-The "Arzi Business Dashboard" is designed to deliver a premium fintech experience, prioritizing rapid data entry, high readability, and a luxurious aesthetic. The design system follows a "Luxurious Metallic Gold" and "Gilded Ivory" theme paired with consistent data legibility for dense financial tables.
+# UI Architecture & Design System for PayTrack  
+The "PayTrack" is designed to deliver a premium fintech experience, prioritizing rapid data entry, high readability, and a luxurious aesthetic. The design system follows a "Luxurious Metallic Gold" and "Gilded Ivory" theme paired with consistent data legibility for dense financial tables.
 
 ---
 

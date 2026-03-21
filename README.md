@@ -1,11 +1,11 @@
-# Arzi Business Dashboard 🏦💰
+# PayTrack 🏦💰
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
-**Arzi Business Dashboard** is a premium, cloud-based loan management and payment tracking system. Designed for lending businesses transitioning from manual spreadsheets, it provides a sophisticated interface for tracking borrowers, automating loan schedules, and managing profit allocations with institutional precision.
+**PayTrack** is a premium, cloud-based loan management and payment tracking system. Designed for lending businesses transitioning from manual spreadsheets, it provides a sophisticated interface for tracking borrowers, automating loan schedules, and managing profit allocations with institutional precision.
 
 ---
 
@@ -17,7 +17,7 @@ The application is built on a **"Luxurious Metallic Gold"** and **"Gilded Ivory"
 - **Metallic Gold Accents**: Sophisticated branding and primary actions.
 - **Tabular Precision**: Strictly aligned numerical data for financial accuracy.
 
-![Arzi Dashboard Preview](C:\Users\alec\.gemini\antigravity\brain\fd8bc3cf-1969-480b-8963-2ee793671cbd\arzi_dashboard_preview_1774024242010.png)
+![PayTrack Preview](C:\Users\alec\.gemini\antigravity\brain\fd8bc3cf-1969-480b-8963-2ee793671cbd\arzi_dashboard_preview_1774024242010.png)
 
 ---
 
