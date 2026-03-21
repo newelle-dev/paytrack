@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   Users,
   CreditCard,
-  Banknote,
   Menu,
   X,
 } from "lucide-react";
@@ -16,7 +15,6 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Borrowers", href: "/borrowers", icon: Users },
   { name: "Loans", href: "/loans", icon: CreditCard },
-  { name: "Payments", href: "/payments", icon: Banknote },
 ];
 
 export function Sidebar({

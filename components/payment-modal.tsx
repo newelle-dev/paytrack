@@ -7,7 +7,10 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { logPayment } from "@/app/(dashboard)/loans/actions";
+import { AlertCircle } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -15,6 +18,7 @@ interface PaymentModalProps {
   loanId: string;
   borrowerName: string;
   remainingBalance: number;
+  suggestedAmount?: number;
 }
 
 export function PaymentModal({
@@ -23,6 +27,7 @@ export function PaymentModal({
   loanId,
   borrowerName,
   remainingBalance,
+  suggestedAmount,
 }: PaymentModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +52,7 @@ export function PaymentModal({
     if (amount > remainingBalance) {
       if (
         !confirm(
-          `You are logging a payment of ${amount} which is more than the remaining balance of ${remainingBalance}. Are you sure?`,
+          `The payment amount (${formatCurrency(amount)}) exceeds the remaining balance (${formatCurrency(remainingBalance)}). Are you sure you want to proceed?`,
         )
       ) {
         setIsSubmitting(false);
@@ -78,48 +83,55 @@ export function PaymentModal({
       onClose={onClose}
       title={`Log Payment for ${borrowerName}`}
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-4">
         {error && (
-          <div className="text-red-600 text-sm font-medium">{error}</div>
+          <div className="bg-error/10 border border-error/20 text-error p-3 rounded-md text-sm flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{error}</span>
+          </div>
         )}
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="amountPaid">Amount Paid (PHP)</Label>
-          <Input
-            id="amountPaid"
-            name="amountPaid"
-            type="number"
-            step="0.01"
-            placeholder="0.00"
-            required
-            defaultValue={remainingBalance > 0 ? remainingBalance : ""}
-          />
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="amountPaid">Amount Paid (PHP)</Label>
+            <Input
+              id="amountPaid"
+              name="amountPaid"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              required
+              defaultValue={suggestedAmount ?? (remainingBalance > 0 ? remainingBalance : "")}
+              className="font-mono"
+            />
+          </div>
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="datePaid">Payment Date</Label>
-          <Input
-            id="datePaid"
-            name="datePaid"
-            type="date"
-            required
-            defaultValue={format(new Date(), "yyyy-MM-dd")}
-          />
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="datePaid">Payment Date</Label>
+            <Input
+              id="datePaid"
+              name="datePaid"
+              type="date"
+              required
+              defaultValue={format(new Date(), "yyyy-MM-dd")}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="paymentMethod">Payment Method</Label>
-          <select
+          <Select
             id="paymentMethod"
             name="paymentMethod"
-            className="flex h-10 w-full rounded-md border border-ivory-cream bg-white px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+            defaultValue="Cash"
+            required
           >
             <option value="Cash">Cash</option>
             <option value="Bank Transfer">Bank Transfer</option>
             <option value="GCash">GCash</option>
             <option value="Check">Check</option>
             <option value="Other">Other</option>
-          </select>
+          </Select>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -132,19 +144,20 @@ export function PaymentModal({
           />
         </div>
 
-        <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-ivory-cream">
+        <div className="flex justify-end gap-3 mt-4 pt-5 border-t border-ivory-cream">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
             disabled={isSubmitting}
+            className="border-ivory-cream text-text-secondary hover:bg-ivory-cream/20"
           >
             Cancel
           </Button>
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="bg-gold hover:bg-gold/90 text-white border-0"
+            className="bg-gold hover:bg-gold/90 text-white border-0 px-8"
           >
             {isSubmitting ? "Saving..." : "Log Payment"}
           </Button>

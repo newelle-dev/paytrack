@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import { LoanDetailClient } from "./loan-detail-client";
+import { type Loan } from "@/lib/types";
 
 export default async function LoanDetailPage({
   params,
@@ -64,7 +65,7 @@ export default async function LoanDetailPage({
     ) || 0;
   const remainingBalance = Math.max(0, totalExpected - totalPaid);
 
-  const formattedLoan = {
+  const formattedLoan: Loan = {
     ...loan,
     remaining_balance: remainingBalance,
     // Ensure schedule is ordered by date

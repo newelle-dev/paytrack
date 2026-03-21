@@ -30,7 +30,7 @@
 | #   | Task                       | Details                                                                                                                                                      |
 | --- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 1.1 | **Global CSS & Theme**     | Implement the Gilded-Ivory / Metallic-Gold color palette, Inter font, tabular-nums, and the `gold-glow` animation in `globals.css` via Tailwind v4 `@theme`. |
-| 1.2 | **Root Layout**            | Sidebar / top-nav shell with navigation links: _Dashboard_, _Borrowers_, _Loans_, _Payments_. Responsive sidebar collapse for mobile.                        |
+| 1.2 | **Root Layout**            | Sidebar / top-nav shell with navigation links: _Dashboard_, _Borrowers_, _Loans_. Responsive sidebar collapse for mobile.                        |
 | 1.3 | **Reusable UI Primitives** | Build shared components: `Button`, `Card`, `Input`, `Select`, `Modal`, `Badge` (status tags), `DataTable` skeleton — all following the design system tokens. |
 
 > **Estimated effort:** ~1–2 sessions
