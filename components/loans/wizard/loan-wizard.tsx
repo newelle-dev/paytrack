@@ -153,8 +153,8 @@ export function LoanWizard({ initialBorrowers }: LoanWizardProps) {
       loanCategory: isBigLoan ? ("Big" as const) : ("Small" as const),
       termType: isBigLoan ? "Custom" : termType,
       totalInterestExpected: calcResult.totalInterestExpected,
-      rcAllocation: Number(rcDollar),
-      edithAllocation: Number(edithDollar),
+      rcAllocation: Number(rcPercent),
+      edithAllocation: Number(edithPercent),
       schedules: calcResult.schedules,
     }
 
@@ -393,6 +393,14 @@ export function LoanWizard({ initialBorrowers }: LoanWizardProps) {
                   <div className="flex justify-between py-1 border-b">
                     <span className="text-text-secondary">Release Date</span>
                     <span className="font-medium">{releaseDate ? format(new Date(releaseDate), "PPP") : ""}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b">
+                    <span className="text-text-secondary">RC Allocation</span>
+                    <span className="font-medium">{rcPercent}% (₱{Number(rcDollar).toFixed(2)})</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b">
+                    <span className="text-text-secondary">EDITH Allocation</span>
+                    <span className="font-medium">{edithPercent}% (₱{Number(edithDollar).toFixed(2)})</span>
                   </div>
                 </div>
               </div>

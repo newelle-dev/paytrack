@@ -78,3 +78,30 @@ export async function createLoan(payload: CreateLoanPayload) {
 
   return { success: true, loanId: loan.id }
 }
+
+export async function markLoanAsPaid(loanId: string) {
+  const supabase = await createClient()
+
+  // Verify User
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return { error: "You must be logged in to update a loan." }
+  }
+
+  // Update loan status
+  const { error } = await supabase
+    .from("loans")
+    .update({ status: "Paid" })
+    .eq("id", loanId)
+    .eq("user_id", user.id)
+
+  if (error) {
+    console.error("Supabase Loan Update Error:", error)
+    return { error: "Failed to update loan status. " + error.message }
+  }
+
+  revalidatePath("/loans")
+  revalidatePath(`/loans/${loanId}`)
+
+  return { success: true }
+}

@@ -15,7 +15,8 @@
 | Phase 1: Design System & Layout Shell | ✅ Done |
 | Phase 2: Authentication | ✅ Done |
 | Phase 3: Borrower Directory | ✅ Done |
-| Phase 4: Loan Creation Wizard | 🚧 In Progress |
+| Phase 4: Loan Creation Wizard | ✅ Done |
+| Phase 5: Loan Management | 🚧 In Progress |
 
 ---
 
