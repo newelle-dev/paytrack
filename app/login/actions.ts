@@ -46,3 +46,22 @@ export async function signout() {
   revalidatePath("/", "layout");
   redirect("/login");
 }
+export async function updateProfile(formData: FormData) {
+  const supabase = await createClient();
+
+  const data: { email?: string; password?: string } = {};
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  if (email) data.email = email;
+  if (password) data.password = password;
+
+  const { error } = await supabase.auth.updateUser(data);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/", "layout");
+  return { success: true };
+}
