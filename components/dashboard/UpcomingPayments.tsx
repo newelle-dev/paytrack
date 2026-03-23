@@ -100,7 +100,7 @@ export function UpcomingPayments({
             </CardTitle>
             <CardDescription>Upcoming collections for the week</CardDescription>
           </div>
-          <Badge variant="secondary">{dueThisWeek.length} Upcoming</Badge>
+          <Badge variant="default">{dueThisWeek.length} Upcoming</Badge>
         </CardHeader>
         <CardContent className="px-0">
           <Table>
